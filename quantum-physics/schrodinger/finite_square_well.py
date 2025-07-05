@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Finite square well: bound‑state energies and wavefunctions
 
