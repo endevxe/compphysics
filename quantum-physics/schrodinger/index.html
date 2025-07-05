@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Schrödinger Equation Projects</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <style>
+    body{
+      font-family:sans-serif;
+      max-width:800px;
+      margin:2rem auto;
+      line-height:1.6;
+    }
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>The One‑Dimensional Schrödinger Equation</h1>
+
+<p>
+  The Schrödinger equation is the central tool of non‑relativistic quantum mechanics.
+  In its time‑independent form it reads
+  \[
+     -\frac{\hbar^{2}}{2m}\frac{d^{2}\psi(x)}{dx^{2}} + V(x)\,\psi(x) = E\,\psi(x),
+  \]
+  where \( \psi(x) \) is the stationary wavefunction, \( E \) is the corresponding energy,
+  \( m \) is the particle mass, and \( V(x) \) is the external potential.
+  Once \( V(x) \) is specified, boundary conditions fix the allowed energies and the
+  shapes of the eigenfunctions.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;The Infinite Square Well (“Particle in a Box”)</h2>
+
+<p>
+  In the simplest textbook case the particle is trapped
+  between two infinitely high walls a distance \( L \) apart.
+  Inside the box the potential is zero; outside, it is infinite,
+  so the wavefunction must vanish at the walls.
+  Inside the well the equation reduces to
+  \[
+     \frac{d^{2}\psi}{dx^{2}} + k^{2}\psi = 0,\qquad
+     k^{2} = \frac{2mE}{\hbar^{2}}.
+  \]
+  Imposing \( \psi(0)=\psi(L)=0 \) gives the familiar sine solutions
+  \[
+     \psi_n(x)=\sqrt{\frac{2}{L}}\sin\!\Bigl(\frac{n\pi x}{L}\Bigr),\qquad
+     E_n=\frac{n^{2}\pi^{2}\hbar^{2}}{2mL^{2}},\quad n=1,2,3,\dots
+  \]
+  A finite‑difference matrix built from the second‑derivative operator reproduces
+  these results numerically; the script
+  <code>schrodinger.py</code> diagonalises that matrix and plots the first four
+  eigenstates.
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Exploring Many Infinite‑Well States</h2>
+
+<p>
+  Although a finite‑difference approach works, the analytic formula above allows us
+  to plot dozens of eigenfunctions in a fraction of a second.  The helper program
+  <code>many_states_infinite_well.py</code> simply evaluates the sine expression
+  for any desired quantum number \( n \) and offsets each curve vertically so that
+  they do not overlap.  Running it reveals the progressive increase in nodes and
+  energy spacing as \( n \) grows.
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;The Finite Square Well</h2>
+
+<p>
+  If the walls are given a finite height \( V_{0} \) instead of being infinite,
+  the particle can tunnel slightly into the barrier region.
+  Bound states still exist when \( E&lt;V_{0} \),
+  but their energies are lower than in the infinite case and the wavefunctions
+  develop exponential tails.
+  In <code>finite_square_well.py</code> a shooting method integrates the equation
+  from one wall to the centre of the well while adjusting \( E \) until the
+  boundary conditions are met;
+  the resulting energies and normalised wavefunctions are then plotted.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Time‑Dependent Wave Packet</h2>
+
+<p>
+  A stationary state never changes shape, but real quantum particles often begin
+  as localised wave packets.
+  The split‑operator method propagates such a packet by alternating short
+  “kicks” from the kinetic and potential energy operators.
+  In <code>wavepacket_split_operator.py</code> a Gaussian packet starts near the
+  left wall and bounces back and forth inside the well.
+  Frames are saved every few time steps and stacked with vertical offsets so that
+  the spreading and interference patterns are easy to see.
+</p>
+
+<h2>5&nbsp;&middot;&nbsp;Numerical Ingredients</h2>
+
+<p>
+  All simulations set \( \hbar = m = L = 1 \).  These choices simply fix the
+  length, mass and energy scales so no experimental data are required.
+  Finite‑difference grids convert derivatives into sparse matrices, while the
+  split‑operator algorithm relies on the Fast Fourier Transform to switch
+  quickly between position and momentum space.
+  Diagonalisation uses standard linear‑algebra routines from
+  <code>numpy.linalg</code>, and integration for the finite well uses
+  <code>scipy.integrate.solve_ivp</code>.
+</p>
+
+<h2>6&nbsp;&middot;&nbsp;Source Code</h2>
+
+<p>
+  You can inspect or download each script directly:
+</p>
+<p>
+  &bull; <a href="schrodinger.py"              target="_blank">schrodinger.py</a> – finite‑difference diagonalisation of the infinite well.<br>
+  &bull; <a href="many_states_infinite_well.py" target="_blank">many_states_infinite_well.py</a> – analytic plot of the first <em>N</em> infinite‑well states.<br>
+  &bull; <a href="finite_square_well.py"       target="_blank">finite_square_well.py</a> – shooting method for a finite well.<br>
+  &bull; <a href="wavepacket_split_operator.py" target="_blank">wavepacket_split_operator.py</a> – split‑operator FFT evolution of a Gaussian packet.
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
