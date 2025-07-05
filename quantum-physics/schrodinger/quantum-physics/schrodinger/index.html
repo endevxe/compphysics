@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Schrödinger Equation</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Time-Independent Schrödinger Equation</h1>
+  <p>This simulation numerically solves the Schrödinger equation for a quantum particle in a one-dimensional potential well (infinite square well).</p>
+
+  <h2>1. Introduction</h2>
+  <p>
+    The Schrödinger equation is a fundamental equation of quantum mechanics. It describes how the quantum state of a physical system evolves. In the time-independent form, it determines the stationary states and allowed energy levels of a particle:
+  </p>
+  <p>
+    $$
+    -\frac{\hbar^2}{2m} \frac{d^2\psi(x)}{dx^2} + V(x)\psi(x) = E\psi(x)
+    $$
+  </p>
+
+  <h2>2. Infinite Potential Well (Particle in a Box)</h2>
+  <p>
+    For a particle confined in a 1D box of length \( L \), with infinitely high potential walls:
+  </p>
+  <ul>
+    <li> \( V(x) = 0 \) for \( 0 < x < L \)</li>
+    <li> \( V(x) = \infty \) otherwise</li>
+  </ul>
+  <p>
+    Inside the box, the equation simplifies to:
+  </p>
+  <p>
+    $$
+    \frac{d^2\psi(x)}{dx^2} + k^2 \psi(x) = 0,\quad \text{where } k^2 = \frac{2mE}{\hbar^2}
+    $$
+  </p>
+
+  <h2>3. Boundary Conditions and Solution</h2>
+  <p>
+    The wavefunction must vanish at the walls: \( \psi(0) = \psi(L) = 0 \).
+    Solving this boundary value problem gives:
+  </p>
+  <p>
+    $$
+    \psi_n(x) = \sqrt{\frac{2}{L}} \sin\left( \frac{n\pi x}{L} \right), \quad n = 1, 2, 3, \dots
+    $$
+    $$
+    E_n = \frac{n^2 \pi^2 \hbar^2}{2mL^2}
+    $$
+  </p>
+  <p>
+    These are the quantized energy levels and normalized wavefunctions.
+  </p>
+
+  <h2>4. Numerical Simulation</h2>
+  <p>
+    In the simulation, we discretize space and solve the Schrödinger equation using a finite difference method (such as the shooting method or matrix diagonalization). This gives us the wavefunctions and energy levels numerically.
+  </p>
+
+  <h2>5. Why No Real Data is Needed</h2>
+  <p>
+    This is a theoretical model. By assigning values like \( \hbar = 1 \), \( m = 1 \), and \( L = 1 \), we simulate the behavior of a generic quantum particle. The results are scaled and apply to ideal systems — no experimental data is needed to compute eigenstates or visualize them.
+  </p>
+
+  <h2>6. Code</h2>
+  <p><a href="schrodinger.py" target="_blank">schrodinger.py (source)</a></p>
+
+  <h2>7. Back to Homepage</h2>
+  <p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
