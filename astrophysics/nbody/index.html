@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>N-Body Gravitational Simulation</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>N-Body Gravitational Simulation</h1>
+
+<p>
+  This project simulates the motion of multiple celestial bodies under Newtonian gravity.
+  It models solar system–like dynamics using Newton’s law of gravitation and a numerical
+  integrator (Runge–Kutta 4) to solve the resulting coupled differential equations.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;Newton’s Law of Gravitation</h2>
+<p>
+  The gravitational force between two point masses is given by:
+  \[
+  \mathbf{F}_{ij} = -G \frac{m_i m_j}{r_{ij}^3} (\mathbf{r}_i - \mathbf{r}_j)
+  \]
+  where \( G \) is the gravitational constant, \( m_i \) and \( m_j \)
+  are the masses, and \( \mathbf{r}_i - \mathbf{r}_j \) is their separation vector.
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Equations of Motion</h2>
+<p>
+  Each body experiences the net force from all other bodies, resulting in the
+  coupled ODEs:
+  \[
+  \frac{d^2 \mathbf{r}_i}{dt^2} = \sum_{j \neq i} -G \frac{m_j}{|\mathbf{r}_j - \mathbf{r}_i|^3} (\mathbf{r}_i - \mathbf{r}_j)
+  \]
+  These are numerically solved for \( \mathbf{r}_i(t) \) using RK4 integration.
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;Units and Assumptions</h2>
+<p>
+  Units are chosen so that \( G = 1 \), distances are in astronomical units (AU),
+  masses are in solar masses, and time is in years. The simulation assumes no
+  relativistic effects and ignores collisions — all bodies are point masses.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Numerical Method</h2>
+<p>
+  The simulation uses the 4th-order Runge–Kutta method to evolve the system.
+  RK4 balances speed and stability, making it ideal for moderate-accuracy orbital
+  modeling.
+</p>
+
+<h2>5&nbsp;&middot;&nbsp;Visualizing the Trajectories</h2>
+<p>
+  Each body’s position is tracked over time and plotted to show its orbital path.
+  For small systems, this reveals familiar patterns like ellipses and loops.
+  Complex interactions (like perturbations) can be seen in multi-body cases.
+</p>
+
+<h2>6&nbsp;&middot;&nbsp;Source Code</h2>
+<p>
+  <a href="nbody_simulation.py" target="_blank">nbody_simulation.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
