@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Ideal Gas Simulation</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>Ideal Gas Simulation</h1>
+
+<p>
+  This project models a collection of particles in a 2D box behaving as an ideal gas. 
+  Each particle undergoes elastic collisions with the box walls. The simulation tracks 
+  how their velocity distribution evolves, and compares it with the theoretical 
+  Maxwell–Boltzmann distribution.
+</p>
+
+<h2>1 · Ideal Gas Assumptions</h2>
+<p>
+  The simulation assumes:
+  <ul>
+    <li>Particles are point-like with no interaction except for collisions.</li>
+    <li>Elastic collisions with container walls conserve energy.</li>
+    <li>No inter-particle collisions (can be added for realism).</li>
+  </ul>
+</p>
+
+<h2>2 · Velocity Distribution</h2>
+<p>
+  As time progresses, even if initialized with arbitrary speeds, the system’s velocity 
+  distribution naturally approaches the Maxwell–Boltzmann form:
+  \[
+    f(v) = \frac{m}{k_B T} v \exp\left( -\frac{m v^2}{2 k_B T} \right)
+  \]
+  In 2D, this form is modified slightly, but the key shape and behavior remains.
+</p>
+
+<h2>3 · Simulation Goals</h2>
+<p>
+  The animation shows two things:
+  <ol>
+    <li>Particles moving in the box and bouncing off the walls.</li>
+    <li>A histogram of their speeds over time compared to the Maxwell–Boltzmann curve.</li>
+  </ol>
+</p>
+
+<h2>4 · Observations</h2>
+<p>
+  Over time, the velocity distribution becomes smoother and more bell-shaped. 
+  The simulation demonstrates how energy spreads naturally in a system of free 
+  particles due to random motion, even without explicit interactions.
+</p>
+
+<h2>5 · Source Code</h2>
+<p>
+  <a href="ideal_gas_simulation.py" target="_blank">ideal_gas_simulation.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
