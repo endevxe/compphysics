@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Random Walk & Diffusion</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>Brownian Motion, Random Walk & Diffusion</h1>
+
+<p>
+  The erratic motion of pollen grains observed by Robert Brown is now understood
+  as the cumulative effect of countless molecular collisions.  In statistical
+  mechanics this is idealised as a <em>random walk</em>: at each time step a
+  particle makes an independent, random step of fixed length.
+</p>
+
+<h2>1 · Lattice Random Walk Model</h2>
+
+<p>
+  In two dimensions we let the walker start at the origin and move one lattice
+  spacing in one of four cardinal directions with equal probability.  Repeating
+  this for many walkers produces an ensemble suitable for averaging.
+</p>
+
+<h2>2 · Mean‑Square Displacement</h2>
+
+<p>
+  A hallmark of diffusion is that the mean‑square displacement (MSD)
+  grows linearly with time:
+  \[
+      \langle r^{2}(t) \rangle = 4 D t
+      \quad\text{(in 2‑D)} ,
+  \]
+  where \( D \) is the diffusion coefficient.  By fitting a straight line to
+  the simulated MSD curve we can <strong>derive \( D \)</strong> directly from
+  the random walk data, without any external measurement.
+</p>
+
+<h2>3 · Monte‑Carlo Simulation</h2>
+
+<p>
+  The script initialises thousands of independent walkers, advances each one in
+  parallel, and records \( \langle r^{2} \rangle \) after every step.
+  A simple linear regression on the MSD versus step number yields
+  the slope and therefore the diffusion coefficient via \( D = \text{slope}/4 \).
+</p>
+
+<h2>4 · Results & Interpretation</h2>
+
+<p>
+  At long times the MSD points fall neatly on a straight line, confirming
+  diffusive behaviour.  Deviations at early times reflect the discrete
+  lattice nature and finite sampling.  Increasing the number of walkers
+  reduces statistical noise; increasing the number of steps extends the
+  range over which the linear fit is valid.
+</p>
+
+<h2>5 · Source Code</h2>
+
+<p>
+  <a href="random_walk_diffusion.py" target="_blank">random_walk_diffusion.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
