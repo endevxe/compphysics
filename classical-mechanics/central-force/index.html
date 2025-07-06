@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Central Force Motion</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>Central Force Motion</h1>
+
+<p>
+  This simulation explores how a body moves under a central inverse-square force like Newtonian gravity. 
+  It's an idealized two-body problem where a planet orbits a massive central star.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;Force Law</h2>
+<p>
+  The inverse-square central force is given by:
+  \[
+    \mathbf{F} = -\frac{G M m}{r^2} \hat{r}
+  \]
+  where \( G \) is the gravitational constant, \( M \) is the central mass, 
+  \( m \) is the orbiting body’s mass, and \( \hat{r} \) is the unit vector 
+  pointing from the central mass to the orbiting object.
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Equations of Motion</h2>
+<p>
+  Newton’s second law gives:
+  \[
+    m \frac{d^2 \mathbf{r}}{dt^2} = -\frac{G M m}{|\mathbf{r}|^3} \mathbf{r}
+  \]
+  which simplifies (canceling \( m \)) to:
+  \[
+    \frac{d^2 \mathbf{r}}{dt^2} = -\frac{G M}{|\mathbf{r}|^3} \mathbf{r}
+  \]
+  This is a nonlinear second-order differential equation that describes conic section orbits.
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;Elliptic vs Scattering Trajectories</h2>
+<p>
+  The type of orbit depends on total energy:
+  <ul>
+    <li><strong>Negative total energy</strong> → Elliptical orbits (bound)</li>
+    <li><strong>Zero energy</strong> → Parabolic escape trajectory</li>
+    <li><strong>Positive energy</strong> → Hyperbolic path (scattering)</li>
+  </ul>
+  Adjusting the initial speed lets us model both bound planets and scattering comets.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Numerical Solution</h2>
+<p>
+  The system is solved numerically using the 4th-order Runge–Kutta method. 
+  This allows us to explore arbitrary orbits, including ones with complex initial conditions.
+</p>
+
+<h2>5&nbsp;&middot;&nbsp;Source Code</h2>
+<p>
+  <a href="central_force.py" target="_blank">central_force.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
