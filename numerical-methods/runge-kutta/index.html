@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Runge–Kutta Method</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>The Classical Fourth‑Order Runge–Kutta Method (RK4)</h1>
+
+<p>
+  Many problems in physics reduce to solving ordinary differential equations
+  (ODEs) of the form
+  \[
+     \frac{dy}{dt}=f(t,y), \qquad y(t_0)=y_0,
+  \]
+  where the function \( f \) is known and one seeks \( y(t) \) for
+  \( t>t_0 \).  Analytical solutions exist only for special cases,
+  so numerical integration becomes essential.
+  One of the most widely used single‑step algorithms is the
+  classical fourth‑order Runge–Kutta scheme, abbreviated RK4.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;Derivation in One Paragraph</h2>
+
+<p>
+  RK4 advances the solution from \( t_n \) to \( t_{n+1}=t_n+h \) by
+  evaluating the slope function \( f \) four times:
+  \[
+  \begin{aligned}
+    k_1 &= f(t_n,\,y_n),\\
+    k_2 &= f\!\bigl(t_n+\tfrac{h}{2},\,y_n+\tfrac{h}{2}k_1\bigr),\\
+    k_3 &= f\!\bigl(t_n+\tfrac{h}{2},\,y_n+\tfrac{h}{2}k_2\bigr),\\
+    k_4 &= f(t_n+h,\,y_n+hk_3).
+  \end{aligned}
+  \]
+  A weighted average of these slopes gives the increment
+  \[
+     y_{n+1}=y_n+\frac{h}{6}\bigl(k_1+2k_2+2k_3+k_4\bigr).
+  \]
+  Expanding each \( k_i \) in a Taylor series about \( t_n \)
+  shows that the local truncation error is \( \mathcal{O}(h^5) \),
+  making the overall method fourth‑order accurate
+  (\(\mathcal{O}(h^4)\) per unit‑time interval).
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Why Four Slopes?</h2>
+
+<p>
+  The first slope \( k_1 \) estimates the derivative at the left endpoint.
+  The middle slopes \( k_2 \) and \( k_3 \) refine the estimate by sampling
+  at the midpoint using provisional values of \( y \).
+  The final slope \( k_4 \) samples the derivative at the right endpoint.
+  The specific weights&nbsp;\(1,2,2,1\) in the update formula ensure that
+  all terms up to \( h^{4} \) in the Taylor expansion cancel exactly,
+  leaving an error proportional to \( h^{5} \).
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;Accuracy and Step Size</h2>
+
+<p>
+  Halving the step size \( h \) should reduce the global error by a factor
+  of roughly \( 2^{4}=16 \).  In practice, stiffness or rapidly varying
+  solutions may demand adaptive step‑size control.  Embedded Runge–Kutta
+  pairs such as RK45 provide built‑in error estimates,
+  but the fixed‑step RK4 often remains the first choice for smooth problems
+  because of its simplicity and good balance between cost and accuracy.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Demonstration Problem</h2>
+
+<p>
+  The test script <code>rk4_demo.py</code> integrates the exponential‑decay
+  equation \( dy/dt=-y \) with the initial condition \( y(0)=1 \).
+  The analytic solution \( y(t)=e^{-t} \) is plotted alongside the RK4
+  approximation, confirming fourth‑order convergence when the step size
+  is reduced.
+</p>
+
+<h2>5&nbsp;&middot;&nbsp;Source Code</h2>
+
+<p>
+  <a href="rk4_demo.py" target="_blank">rk4_demo.py &nbsp;(download / view)</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
