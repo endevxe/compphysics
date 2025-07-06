@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>2‑D Ising Model</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>The 2‑D Ising Model</h1>
+
+<p>
+  The Ising model captures the essence of ferromagnetism by assigning each
+  lattice site a spin \( s_{i} = \pm 1 \).  Spins prefer to align with their
+  nearest neighbours when the coupling \( J &gt; 0 \), competing against
+  thermal fluctuations from temperature \( T \).
+</p>
+
+<h2>1 · Hamiltonian</h2>
+<p>
+  The energy of a spin configuration is
+  \[
+      \mathcal{H} = -J \sum_{\langle i,j\rangle} s_i s_j ,
+  \]
+  where the sum runs over all nearest‑neighbour pairs on a square lattice
+  and \( J &gt; 0 \) promotes alignment.  No external magnetic field
+  is included here.
+</p>
+
+<h2>2 · Metropolis Monte‑Carlo</h2>
+<p>
+  Exact solutions exist only in two dimensions at zero field, so we generate
+  representative configurations numerically.  A Monte‑Carlo sweep chooses a
+  random spin, computes the energy change \( \Delta E \) if it were flipped,
+  and accepts the flip with probability
+  \(\min\!\bigl(1, e^{-\Delta E / k_B T}\bigr)\).
+  Repeating this constitutes a Markov chain sampling the Boltzmann
+  distribution.
+</p>
+
+<h2>3 · Order Parameter</h2>
+<p>
+  The magnetisation per spin,
+  \[
+      M = \frac{1}{N}\sum_i s_i ,
+  \]
+  serves as the order parameter.  Below the critical temperature
+  \( T_c \approx 2.27\,J/k_B \) the system spontaneously picks a
+  majority‑up or majority‑down state and \( |M| \) stays non‑zero.
+  Above \( T_c \) thermal disorder dominates and \( M \) fluctuates
+  around zero.
+</p>
+
+<h2>4 · Phase‑Transition Demonstration</h2>
+<p>
+  Run the script at a sequence of temperatures.
+  You will observe that the time‑averaged \( |M| \) drops sharply
+  as \( T \) crosses \( T_c \), illustrating a continuous phase
+  transition.  Finite‑size effects smear out the sharpness; increasing
+  the lattice size \( L \) sharpens the curve.
+</p>
+
+<h2>5 · Source Code</h2>
+<p>
+  <a href="ising_model.py" target="_blank">ising_model.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
