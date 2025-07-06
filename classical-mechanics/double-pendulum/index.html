@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Double Pendulum</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>Double Pendulum Simulation</h1>
+
+<p>
+  The double pendulum consists of two pendulums attached end to end.
+  It is a classic example of a simple system that exhibits chaotic behavior —
+  small differences in starting conditions lead to vastly different outcomes.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;Equations of Motion</h2>
+<p>
+  The system has two angular coordinates: \( \theta_1 \) and \( \theta_2 \).
+  Using Lagrangian mechanics, we derive a set of coupled second-order differential equations.
+  These are nonlinear and contain terms like \( \sin(\theta_1 - \theta_2) \),
+  making the system highly sensitive to initial conditions.
+</p>
+
+<p>
+  The equations are reduced to four first-order ODEs for \( \theta_1, \omega_1, \theta_2, \omega_2 \),
+  where \( \omega_i = \frac{d\theta_i}{dt} \), and solved numerically using the 4th-order Runge–Kutta method (RK4).
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Numerical Method</h2>
+<p>
+  The RK4 method is used to evolve the system in time. It evaluates four intermediate slopes per time step
+  and combines them to produce an accurate next value. This is crucial for chaotic systems where precision matters.
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;No Real-World Data Needed</h2>
+<p>
+  The system is modeled in dimensionless units: \( m = L = g = 1 \).
+  This lets us understand the ideal behavior of the system without using physical data.
+  It's useful for visualizing how energy and chaos emerge in theoretical setups.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;What You’ll See</h2>
+<p>
+  The animation shows the two pendulum bobs moving. You will notice that their motion is smooth at first,
+  but soon becomes unpredictable due to chaotic dynamics. A red trail follows the second pendulum bob to show its path.
+</p>
+
+<h2>5&nbsp;&middot;&nbsp;Code</h2>
+<p>
+  <a href="double_pendulum.py" target="_blank">double_pendulum.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
