@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mass–Spring–Damper System</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>Mass–Spring–Damper Oscillator</h1>
+
+<p>
+  Many mechanical and control‑system problems reduce to a single degree of
+  freedom mass \( m \) attached to a spring of stiffness \( k \) and a damper
+  with coefficient \( c \).
+  The governing differential equation is
+  \[
+      m\ddot{x}+c\dot{x}+k x = 0,
+  \]
+  where \( x(t) \) is the displacement from equilibrium.
+  The term \( kx \) pulls the mass back to equilibrium, while \( c\dot{x} \)
+  removes energy and models friction or fluid damping.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;Damping Ratio and Natural Frequency</h2>
+
+<p>
+  Dividing by the mass puts the equation in standard form
+  \[
+      \ddot{x}+2\zeta\omega_n\dot{x}+\omega_n^{2}x = 0,
+      \qquad \omega_n=\sqrt{\dfrac{k}{m}},\quad
+      \zeta=\dfrac{c}{2\sqrt{km}}.
+  </p>
+  The dimensionless damping ratio \( \zeta \) determines the qualitative
+  behavior:
+  &nbsp;\( \zeta&lt;1 \) gives underdamped oscillations,
+  \( \zeta=1 \) is critical damping, and
+  \( \zeta&gt;1 \) is overdamped.
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Analytic Underdamped Solution</h2>
+
+<p>
+  When \( \zeta&lt;1 \) the solution is an exponentially decaying cosine:
+  \[
+    x(t)=e^{-\zeta\omega_n t}\!
+          \Bigl(A\cos\omega_d t + B\sin\omega_d t\Bigr),\quad
+    \omega_d=\omega_n\sqrt{1-\zeta^{2}}.
+  \]
+  Constants \( A \) and \( B \) come from the initial displacement and
+  velocity.
+  Critical and overdamped cases have purely exponential (non‑oscillatory)
+  responses.
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;Numerical Integration with RK4</h2>
+
+<p>
+  Even though an analytic solution exists, a Runge–Kutta integrator is
+  included to demonstrate how one would treat a more complicated or
+  non‑linear variant.  The second‑order ODE is rewritten as two coupled
+  first‑order equations for \( x \) and \( v=\dot{x} \) and advanced with
+  the classical fourth‑order RK4 scheme.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Interpreting the Plot</h2>
+
+<p>
+  The script plots both the analytic solution (for the underdamped case) and
+  the RK4 numerical result.  For appropriate step size \( \Delta t \) the two
+  curves coincide, illustrating the accuracy of RK4.  Changing the damping
+  coefficient in the code lets you visualise overdamped and critically
+  damped behavior as well.
+</p>
+
+<h2>5&nbsp;&middot;&nbsp;Source Code</h2>
+
+<p>
+  <a href="mass_spring_damper.py" target="_blank">mass_spring_damper.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
