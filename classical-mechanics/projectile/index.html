@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Projectile Motion with Air Resistance</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
+    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+  </style>
+</head>
+<body>
+
+<h1>Projectile Motion with Quadratic Drag</h1>
+
+<p>
+  Real projectiles do not follow perfect parabolas because air resistance
+  acts opposite to the velocity.  A common empirical model assumes a drag
+  force proportional to the square of the speed,
+  \[
+     \mathbf{F}_{\text{drag}} = -k\,v\,\mathbf{v},
+  \]
+  where \( k \) depends on shape, cross‑sectional area, and air density.
+  For small objects at modest speeds this “quadratic drag” captures the
+  dominant dissipative effect.
+</p>
+
+<h2>1&nbsp;&middot;&nbsp;Equations of Motion</h2>
+
+<p>
+  Resolving forces horizontally and vertically for a projectile of mass
+  \( m \) gives
+  \[
+     \frac{dv_x}{dt} = -\frac{k}{m}\,v\,v_x, \qquad
+     \frac{dv_y}{dt} = -g -\frac{k}{m}\,v\,v_y,
+  \]
+  with \( v=\sqrt{v_x^{2}+v_y^{2}} \).
+  Integrating these together with
+  \( \frac{dx}{dt}=v_x \) and \( \frac{dy}{dt}=v_y \)
+  forms a set of four first‑order coupled ODEs.
+  Setting \( k=0 \) recovers the ideal, drag‑free parabola
+  \( y = x\tan\theta - \frac{gx^{2}}{2v_0^{2}\cos^{2}\theta} \).
+</p>
+
+<h2>2&nbsp;&middot;&nbsp;Numerical Integration</h2>
+
+<p>
+  The code integrates both models using the classical fourth‑order
+  Runge–Kutta step.  Identical initial speed \( v_0 \) and launch angle
+  \( \theta \) are used; only the drag coefficient \( k \) is varied.
+  Because the system is theoretically defined once \( g, k, m, v_0,
+  \theta \) are chosen, no experimental data are required to plot and
+  compare trajectories.
+</p>
+
+<h2>3&nbsp;&middot;&nbsp;Interpreting the Plot</h2>
+
+<p>
+  The ideal path (no drag) is a perfect parabola and lands farthest
+  down‑range.  The drag‑affected path is flatter and lands sooner because
+  kinetic energy is continually removed by the air.  The stronger the
+  coefficient \( k \), the shorter and lower the real trajectory becomes.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Source Code</h2>
+<p>
+  <a href="projectile_drag.py" target="_blank">projectile_drag.py</a>
+</p>
+
+<h2>Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
