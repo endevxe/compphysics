@@ -5,62 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Classical Mechanics – Episteme</title>
   <style>
-    :root { --accent:#6a0dad; --bg:#000; --fg:#f5f5f5; }
-    body{background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.6;margin:0;max-width:920px;padding:4rem 1rem;}
-    h1{font-size:2rem;margin-top:0;border-bottom:1px solid #222;padding-bottom:0.4rem;}
-    a{color:var(--fg);text-decoration:none;}
-    a:hover{color:var(--accent);}    
-    .proj-card{border:1px solid #222;background:#111;border-radius:8px;padding:1rem 1.2rem;margin:1rem 0;display:flex;justify-content:space-between;align-items:center;transition:background 0.3s ease,transform 0.3s ease;cursor:pointer;}
-    .proj-card:hover{background:#1a1a1a;transform:scale(1.02);}    
-    .proj-info h2{margin:0 0 0.3rem 0;font-size:1.1rem;color:var(--accent);}    
-    .proj-info p{margin:0;font-size:0.9rem;color:#ccc;}
-    .arrow{font-size:1.3rem;color:#888;}
+    :root {
+      --bg: #000;
+      --fg: #f5f5f5;
+      --accent: #6a0dad;
+      --link: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+    }
+    header .brand {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    nav a {
+      margin-left: 1rem;
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: border 0.2s ease;
+    }
+    nav a:hover { border-color: var(--accent); }
+
+    .container {
+      max-width: 960px;
+      margin: 6rem auto 4rem;
+      padding: 0 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .project-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .project-card:hover {
+      transform: scale(1.015);
+      background: #1a1a1a;
+    }
+    .project-card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    .project-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.9rem;
+      color: #888;
+    }
   </style>
 </head>
 <body>
-  <h1>Classical Mechanics</h1>
-  <p>Explore simulations rooted in Newtonian physics, from simple oscillators to chaotic pendulums.</p>
+  <header>
+    <div class="brand">Episteme</div>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+  </header>
 
-  <div class="proj-card" onclick="location.href='pendulum/index.html'">
-    <div class="proj-info">
-      <h2>Simple Pendulum</h2>
-      <p>Small‑angle approximation, nonlinear motion, and period analysis.</p>
+  <main class="container">
+    <h1>Classical Mechanics</h1>
+
+    <div class="project-card" onclick="location.href='pendulum/index.html'">
+      <h3>Simple Pendulum</h3>
+      <p>Nonlinear oscillation of a swinging mass under gravity. Solved with RK4.</p>
     </div>
-    <div class="arrow">→</div>
-  </div>
 
-  <div class="proj-card" onclick="location.href='double-pendulum/index.html'">
-    <div class="proj-info">
-      <h2>Double Pendulum</h2>
-      <p>Two coupled arms showcasing deterministic chaos.</p>
+    <div class="project-card" onclick="location.href='double-pendulum/index.html'">
+      <h3>Double Pendulum</h3>
+      <p>Chaotic motion in a coupled pendulum system. Sensitive to initial conditions.</p>
     </div>
-    <div class="arrow">→</div>
-  </div>
 
-  <div class="proj-card" onclick="location.href='projectile/index.html'">
-    <div class="proj-info">
-      <h2>Projectile Motion (Drag)</h2>
-      <p>Compare ideal parabolic flight to air‑resistance-corrected paths.</p>
+    <div class="project-card" onclick="location.href='projectile/index.html'">
+      <h3>Projectile Motion with Drag</h3>
+      <p>Models air resistance effects on parabolic trajectories. Compares with ideal case.</p>
     </div>
-    <div class="arrow">→</div>
-  </div>
 
-  <div class="proj-card" onclick="location.href='mass-spring-damper/index.html'">
-    <div class="proj-info">
-      <h2>Mass‑Spring‑Damper</h2>
-      <p>Underdamped, critically damped, and overdamped oscillations.</p>
+    <div class="project-card" onclick="location.href='mass-spring-damper/index.html'">
+      <h3>Mass–Spring–Damper System</h3>
+      <p>Oscillatory motion with damping. Common in mechanics and engineering systems.</p>
     </div>
-    <div class="arrow">→</div>
-  </div>
 
-  <div class="proj-card" onclick="location.href='central-force/index.html'">
-    <div class="proj-info">
-      <h2>Central Force Orbits</h2>
-      <p>Keplerian ellipses, hyperbolic scattering under inverse‑square law.</p>
+    <div class="project-card" onclick="location.href='central-force/index.html'">
+      <h3>Central Force Orbits</h3>
+      <p>Simulates elliptical orbits and scattering under an inverse-square force law.</p>
     </div>
-    <div class="arrow">→</div>
-  </div>
+  </main>
 
-  <p style="margin-top:2rem;"><a href="../index.html">← Back to Main Page</a></p>
+  <footer>
+    © 2025 Episteme | Open simulations for education
+  </footer>
 </body>
 </html>
