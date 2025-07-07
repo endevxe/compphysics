@@ -3,28 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Classical Mechanics – Episteme</title>
+  <title>Episteme | Classical Mechanics</title>
   <style>
     :root {
       --bg: #000;
       --fg: #f5f5f5;
       --accent: #6a0dad;
-      --link: #ffffff;
     }
-
-    html { scroll-behavior: smooth; }
     body {
       margin: 0;
+      font-family: system-ui, sans-serif;
       background: var(--bg);
       color: var(--fg);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.6;
     }
-
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(6px);
       z-index: 999;
       display: flex;
@@ -32,65 +28,64 @@
       align-items: center;
       padding: 0.75rem 1.25rem;
     }
-    header .brand {
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
+    .brand { font-size: 1.2rem; font-weight: bold; }
     nav a {
       margin-left: 1rem;
-      color: var(--link);
+      color: var(--fg);
       text-decoration: none;
       font-weight: 500;
-      border-bottom: 2px solid transparent;
-      transition: border 0.2s ease;
     }
-    nav a:hover { border-color: var(--accent); }
+    nav a:hover { color: var(--accent); }
 
-    .container {
-      max-width: 960px;
+    main {
+      max-width: 900px;
       margin: 6rem auto 4rem;
       padding: 0 1rem;
     }
 
     h1 {
-      font-size: 2rem;
-      border-bottom: 1px solid #333;
-      padding-bottom: 0.5rem;
+      text-align: center;
       margin-bottom: 2rem;
+      font-size: 2rem;
     }
 
-    .project-card {
+    .sim-box {
       background: #111;
-      border: 1px solid #222;
-      border-radius: 8px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.25rem;
-      transition: transform 0.3s ease, background 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s ease;
     }
-    .project-card:hover {
-      transform: scale(1.015);
-      background: #1a1a1a;
+    .sim-box:hover {
+      transform: scale(1.02);
     }
-    .project-card h3 {
-      margin: 0 0 0.5rem;
-      font-size: 1.2rem;
+    .sim-box h2 {
+      margin-top: 0;
       color: var(--accent);
+      font-size: 1.2rem;
     }
-    .project-card p {
-      margin: 0;
+    .sim-box p {
       font-size: 0.95rem;
-      color: #ccc;
+      margin: 0.5rem 0 1rem;
+    }
+    .sim-box a {
+      background: var(--accent);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+    .sim-box a:hover {
+      background: #7f22e4;
     }
 
     footer {
       text-align: center;
       padding: 2rem 0;
-      font-size: 0.9rem;
       color: #888;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -104,37 +99,42 @@
     </nav>
   </header>
 
-  <main class="container">
+  <main>
     <h1>Classical Mechanics</h1>
 
-    <div class="project-card" onclick="location.href='pendulum/index.html'">
-      <h3>Simple Pendulum</h3>
-      <p>Nonlinear oscillation of a swinging mass under gravity. Solved with RK4.</p>
+    <div class="sim-box">
+      <h2>Simple Pendulum</h2>
+      <p>Models the motion of a pendulum under gravity using the Runge–Kutta method.</p>
+      <a href="pendulum/">View Simulation</a>
     </div>
 
-    <div class="project-card" onclick="location.href='double-pendulum/index.html'">
-      <h3>Double Pendulum</h3>
-      <p>Chaotic motion in a coupled pendulum system. Sensitive to initial conditions.</p>
+    <div class="sim-box">
+      <h2>Double Pendulum</h2>
+      <p>Explores chaotic motion of a two-link pendulum using numerical solvers.</p>
+      <a href="double-pendulum/">View Simulation</a>
     </div>
 
-    <div class="project-card" onclick="location.href='projectile/index.html'">
-      <h3>Projectile Motion with Drag</h3>
-      <p>Models air resistance effects on parabolic trajectories. Compares with ideal case.</p>
+    <div class="sim-box">
+      <h2>Projectile Motion (with Drag)</h2>
+      <p>Compares ideal and real projectile trajectories by including air resistance.</p>
+      <a href="projectile/">View Simulation</a>
     </div>
 
-    <div class="project-card" onclick="location.href='mass-spring-damper/index.html'">
-      <h3>Mass–Spring–Damper System</h3>
-      <p>Oscillatory motion with damping. Common in mechanics and engineering systems.</p>
+    <div class="sim-box">
+      <h2>Mass–Spring–Damper System</h2>
+      <p>Models damped oscillations and resonance behavior in mechanical systems.</p>
+      <a href="mass-spring-damper/">View Simulation</a>
     </div>
 
-    <div class="project-card" onclick="location.href='central-force/index.html'">
-      <h3>Central Force Orbits</h3>
-      <p>Simulates elliptical orbits and scattering under an inverse-square force law.</p>
+    <div class="sim-box">
+      <h2>Central Force Orbits</h2>
+      <p>Simulates planetary motion and inverse-square law forces (Kepler orbits).</p>
+      <a href="central-force/">View Simulation</a>
     </div>
   </main>
 
   <footer>
-    © 2025 Episteme | Open simulations for education
+    © 2025 Episteme | All rights reserved
   </footer>
 </body>
 </html>
