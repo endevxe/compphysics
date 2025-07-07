@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logistic Map – Episteme</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body {
+      background: #000;
+      color: #f5f5f5;
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #fff;
+      border-bottom: 1px solid #222;
+      padding-bottom: 0.4rem;
+    }
+    a {
+      color: #6a0dad;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    p {
+      margin-bottom: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Logistic Map</h1>
+
+  <h2>1. Introduction</h2>
+  <p>
+    The logistic map is a classic example of how simple nonlinear equations can produce incredibly complex and chaotic behavior. It is defined by the recurrence relation:
+  </p>
+  <p>
+    \[
+    x_{n+1} = r x_n (1 - x_n)
+    \]
+  </p>
+  <p>
+    where \( x \in (0, 1) \) and \( r \in [0, 4] \) is a parameter controlling the system's behavior.
+  </p>
+
+  <h2>2. Bifurcation Diagram</h2>
+  <p>
+    As the parameter \( r \) increases, the behavior of \( x_n \) changes dramatically:
+    <ul>
+      <li>For small \( r \), \( x_n \) converges to a fixed point.</li>
+      <li>As \( r \) increases, the system undergoes period doubling: 2, 4, 8, etc.</li>
+      <li>Eventually, it becomes chaotic, showing no clear pattern.</li>
+    </ul>
+    The bifurcation diagram plots the long-term values of \( x_n \) as a function of \( r \), revealing this complex structure.
+  </p>
+
+  <h2>3. Python Simulation</h2>
+  <p>
+    The script below computes \( x_n \) for many values of \( r \), discards initial iterations, and plots the remaining values. This visualizes how chaos emerges from deterministic equations.
+  </p>
+  <p><a href="logistic-map.py" target="_blank">logistic-map.py (source)</a></p>
+
+  <h2>4. Applications</h2>
+  <p>
+    The logistic map models population dynamics in ecology but is also important in chaos theory, cryptography, and dynamical systems. It shows how unpredictability can arise from seemingly predictable systems.
+  </p>
+
+  <p><a href="../../index.html">← Back to Home</a></p>
+</body>
+</html>
