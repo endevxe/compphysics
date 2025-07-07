@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RC Circuit – Capacitor Charging & Discharging</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <style>
+    body {
+      background-color: #000;
+      color: #f5f5f5;
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #fff;
+      border-bottom: 1px solid #222;
+      padding-bottom: 0.4rem;
+    }
+    a {
+      color: #6a0dad;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    p {
+      margin-bottom: 1.2rem;
+    }
+    code {
+      background: #111;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Capacitor Charging & Discharging in an RC Circuit</h1>
+
+  <h2>1. Overview</h2>
+  <p>
+    An <strong>RC circuit</strong> consists of a resistor (R) and a capacitor (C) connected in series. When a voltage source is applied, the capacitor charges through the resistor, and when the source is removed, it discharges. The behavior of the voltage across the capacitor is characterized by the <strong>time constant</strong>:
+  </p>
+  <p style="text-align:center; font-size:1.2rem;">
+    \[ \tau = RC \]
+  </p>
+
+  <h2>2. Charging Equation</h2>
+  <p>
+    The voltage across the capacitor when charging is given by:
+  </p>
+  <p style="text-align:center;">
+    \[ V_{\text{charge}}(t) = V_0 \left(1 - e^{-t/\tau} \right) \]
+  </p>
+  <p>
+    At time \( t = \tau \), the voltage reaches about 63% of the maximum value \( V_0 \).
+  </p>
+
+  <h2>3. Discharging Equation</h2>
+  <p>
+    When the source is removed, the capacitor discharges following:
+  </p>
+  <p style="text-align:center;">
+    \[ V_{\text{discharge}}(t) = V_0 e^{-t/\tau} \]
+  </p>
+  <p>
+    After one time constant, the voltage falls to about 37% of its initial value.
+  </p>
+
+  <h2>4. Python Simulation</h2>
+  <p>
+    The simulation uses basic NumPy and Matplotlib functions to numerically evaluate the charging and discharging behavior. The time constant \( \tau \) is marked on the plot for visual understanding.
+  </p>
+
+  <p><a href="capacitor_rc.py" target="_blank">capacitor_rc.py (source)</a></p>
+
+  <h2>5. Back to Homepage</h2>
+  <p><a href="../../index.html">← Return to main page</a></p>
+
+</body>
+</html>
