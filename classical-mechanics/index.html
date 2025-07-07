@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classical Mechanics – Episteme</title>
+  <style>
+    :root { --accent:#6a0dad; --bg:#000; --fg:#f5f5f5; }
+    body{background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.6;margin:0;max-width:920px;padding:4rem 1rem;}
+    h1{font-size:2rem;margin-top:0;border-bottom:1px solid #222;padding-bottom:0.4rem;}
+    a{color:var(--fg);text-decoration:none;}
+    a:hover{color:var(--accent);}    
+    .proj-card{border:1px solid #222;background:#111;border-radius:8px;padding:1rem 1.2rem;margin:1rem 0;display:flex;justify-content:space-between;align-items:center;transition:background 0.3s ease,transform 0.3s ease;cursor:pointer;}
+    .proj-card:hover{background:#1a1a1a;transform:scale(1.02);}    
+    .proj-info h2{margin:0 0 0.3rem 0;font-size:1.1rem;color:var(--accent);}    
+    .proj-info p{margin:0;font-size:0.9rem;color:#ccc;}
+    .arrow{font-size:1.3rem;color:#888;}
+  </style>
+</head>
+<body>
+  <h1>Classical Mechanics</h1>
+  <p>Explore simulations rooted in Newtonian physics, from simple oscillators to chaotic pendulums.</p>
 
+  <div class="proj-card" onclick="location.href='pendulum/index.html'">
+    <div class="proj-info">
+      <h2>Simple Pendulum</h2>
+      <p>Small‑angle approximation, nonlinear motion, and period analysis.</p>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+
+  <div class="proj-card" onclick="location.href='double-pendulum/index.html'">
+    <div class="proj-info">
+      <h2>Double Pendulum</h2>
+      <p>Two coupled arms showcasing deterministic chaos.</p>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+
+  <div class="proj-card" onclick="location.href='projectile/index.html'">
+    <div class="proj-info">
+      <h2>Projectile Motion (Drag)</h2>
+      <p>Compare ideal parabolic flight to air‑resistance-corrected paths.</p>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+
+  <div class="proj-card" onclick="location.href='mass-spring-damper/index.html'">
+    <div class="proj-info">
+      <h2>Mass‑Spring‑Damper</h2>
+      <p>Underdamped, critically damped, and overdamped oscillations.</p>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+
+  <div class="proj-card" onclick="location.href='central-force/index.html'">
+    <div class="proj-info">
+      <h2>Central Force Orbits</h2>
+      <p>Keplerian ellipses, hyperbolic scattering under inverse‑square law.</p>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+
+  <p style="margin-top:2rem;"><a href="../index.html">← Back to Main Page</a></p>
+</body>
+</html>
