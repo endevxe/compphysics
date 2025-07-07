@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Episteme – Open Physics Simulations</title>
+  <title>Episteme - Open Physics Simulations</title>
   <style>
     :root {
-      --bg: #000;          /* pure black */
-      --fg: #f5f5f5;       /* near‑white text */
-      --accent: #6a0dad;   /* royal‑purple – used sparingly */
-      --link: #ffffff;     /* white links */
+      --bg: #000;
+      --fg: #f5f5f5;
+      --accent: #6a0dad;
+      --link: #ffffff;
     }
-
-    /* base layout */
-    html {scroll-behavior: smooth;}
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       background: var(--bg);
@@ -21,8 +19,6 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.6;
     }
-
-    /* ---------------- Header / Hero ---------------- */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -34,7 +30,11 @@
       align-items: center;
       padding: 0.75rem 1.25rem;
     }
-    header .brand {font-size: 1.2rem; font-weight: 600; letter-spacing: 0.05em;}
+    header .brand {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
     nav a {
       margin-left: 1rem;
       color: var(--link);
@@ -43,9 +43,8 @@
       border-bottom: 2px solid transparent;
       transition: border 0.2s ease;
     }
-    nav a:hover {border-color: var(--accent);} /* subtle purple underline on hover */
+    nav a:hover { border-color: var(--accent); }
 
-    /* hero section */
     .hero {
       height: 85vh;
       display: flex;
@@ -67,30 +66,56 @@
       color: #bbb;
     }
 
-    /* section titles */
-    h3 {
-      font-size: 1.4rem;
-      margin: 2.5rem 0 0.7rem;
-      font-weight: 600;
-      border-bottom: 1px solid #222;
-      padding-bottom: 0.3rem;
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 6rem 1rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
 
-    /* list style */
-    ul {list-style: square inside; margin: 0.3rem 0 1.5rem 0.4rem; padding: 0;}
-    li {margin: 0.3rem 0;}
-    a {color: var(--link);} /* default links white */
-    a:hover {color: var(--accent);} /* purple on hover */
+    .category-box {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+      cursor: pointer;
+    }
+    .category-box:hover {
+      transform: scale(1.03);
+      background: #1a1a1a;
+    }
+    .category-box h3 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .category-box p {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .category-box ul {
+      margin: 0.5rem 0 0 1rem;
+      padding-left: 0;
+    }
+    .category-box li {
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+      list-style: disc;
+    }
 
-    /* main content container */
-    .container {max-width: 880px; margin: 0 auto; padding: 6rem 1rem 4rem;} /* 6rem top to clear fixed header */
-
-    /* footer */
-    footer {text-align: center; padding: 2rem 0; font-size: 0.9rem; color: #888;}
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.9rem;
+      color: #888;
+    }
   </style>
 </head>
 <body>
-  <!--  fixed nav strip  -->
   <header>
     <div class="brand">Episteme</div>
     <nav>
@@ -100,69 +125,86 @@
     </nav>
   </header>
 
-  <!--  landing / hero  -->
   <section class="hero">
     <h1>A Repository Of Simulations</h1>
     <h2>Theoretical Models • Open Source • Documentation</h2>
   </section>
 
-  <!--  simulations list  -->
   <main id="simulations" class="container">
-    <h2 style="margin-top:0;">Simulation Library</h2>
+    <div class="category-box" onclick="location.href='classical-mechanics/index.html'">
+      <h3>Classical Mechanics</h3>
+      <p>Newtonian systems and motion modeling.</p>
+      <ul>
+        <li>Simple Pendulum</li>
+        <li>Double Pendulum</li>
+        <li>Projectile Motion</li>
+      </ul>
+    </div>
 
-    <h3>Classical Mechanics</h3>
-    <ul>
-      <li><a href="classical-mechanics/pendulum/">Simple Pendulum</a></li>
-      <li><a href="classical-mechanics/double-pendulum/">Double Pendulum</a></li>
-      <li><a href="classical-mechanics/projectile/">Projectile Motion (with Drag)</a></li>
-      <li><a href="classical-mechanics/mass-spring-damper/">Mass–Spring–Damper</a></li>
-      <li><a href="classical-mechanics/central-force/">Central Force Orbits</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='quantum-physics/index.html'">
+      <h3>Quantum Mechanics</h3>
+      <p>Simulations of quantum systems and wavefunctions.</p>
+      <ul>
+        <li>Schrodinger Equation</li>
+      </ul>
+    </div>
 
-    <h3>Quantum Mechanics</h3>
-    <ul>
-      <li><a href="quantum-physics/schrodinger/">Time‑Independent Schrödinger Eq.</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='astrophysics/index.html'">
+      <h3>Astrophysics</h3>
+      <p>Large-scale simulations like orbits and gravitational systems.</p>
+      <ul>
+        <li>N-Body Simulation</li>
+      </ul>
+    </div>
 
-    <h3>Astrophysics</h3>
-    <ul>
-      <li><a href="astrophysics/nbody/">N‑Body Gravitational Simulation</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='statistical-mechanics/index.html'">
+      <h3>Thermodynamics & Statistical Mechanics</h3>
+      <p>Modeling microscopic behavior and emergent properties.</p>
+      <ul>
+        <li>Ising Model</li>
+        <li>Random Walk</li>
+        <li>Ideal Gas</li>
+      </ul>
+    </div>
 
-    <h3>Thermodynamics & Statistics</h3>
-    <ul>
-      <li><a href="statistical-mechanics/ising/">Ising Model (2‑D)</a></li>
-      <li><a href="statistical-mechanics/random-walk/">Random Walk & Diffusion</a></li>
-      <li><a href="statistical-mechanics/ideal-gas/">Ideal Gas Particles</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='electromagnetism/index.html'">
+      <h3>Electromagnetism</h3>
+      <p>Fields, potentials, and charge-based phenomena.</p>
+      <ul>
+        <li>Electric Field Lines</li>
+        <li>Capacitor Charging</li>
+      </ul>
+    </div>
 
-    <h3>Electromagnetism</h3>
-    <ul>
-      <li><a href="electromagnetism/electric-field-line-visualisation/">Electric Field Line Visualisation</a></li>
-      <li><a href="electromagnetism/capacitor/">Capacitor Charging/Discharging</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='chaos-theory/index.html'">
+      <h3>Chaos & Nonlinear Systems</h3>
+      <p>Deterministic but unpredictable systems.</p>
+      <ul>
+        <li>Logistic Map</li>
+        <li>Lorenz Attractor</li>
+      </ul>
+    </div>
 
-    <h3>Chaos & Nonlinear Dynamics</h3>
-    <ul>
-      <li><a href="chaos-theory/logistic-map/">Logistic Map – Bifurcation & Chaos</a></li>
-      <li><a href="chaos-theory/lorenz-attractor/">Lorenz Attractor – Chaotic Dynamics</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='data-analysis/index.html'">
+      <h3>Data Analysis</h3>
+      <p>Fitting, uncertainty, and error propagation.</p>
+      <ul>
+        <li>Least Squares Fit</li>
+        <li>Monte Carlo Errors</li>
+      </ul>
+    </div>
 
-    <h3>Data Analysis</h3>
-    <ul>
-      <li><a href="data-analysis/least-squares/">Least‑Squares Fitting</a></li>
-      <li><a href="data-analysis/monte-carlo-error/">Monte Carlo Error Propagation</a></li>
-    </ul>
-
-
-    <h3>Numerical Tools</h3>
-    <ul>
-      <li><a href="numerical-methods/runge-kutta/">Runge–Kutta Solver</a></li>
-    </ul>
+    <div class="category-box" onclick="location.href='numerical-methods/index.html'">
+      <h3>Numerical Methods</h3>
+      <p>Solvers and numerical algorithms for differential equations.</p>
+      <ul>
+        <li>Runge-Kutta</li>
+      </ul>
+    </div>
   </main>
 
   <footer>
-    © 2025 Episteme | Built for open learning – last updated July 2025
+    © 2025 Episteme | Built for open learning - last updated July 2025
   </footer>
 </body>
 </html>
