@@ -2,105 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Help | Episteme</title>
   <style>
-    :root {
-      --bg: #000;
-      --fg: #f5f5f5;
-      --accent: #6a0dad;
-      --link: #ffffff;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-    }
-
-    header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(6px);
-      z-index: 999;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 1.25rem;
-    }
-
-    header .brand {
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-
-    nav a {
-      margin-left: 1rem;
-      color: var(--link);
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 2px solid transparent;
-      transition: border 0.2s ease;
-    }
-
-    nav a:hover {
-      border-color: var(--accent);
-    }
-
-    main {
-      max-width: 900px;
-      margin: 6rem auto 3rem;
-      padding: 0 1.2rem;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    h2 {
-      font-size: 1.4rem;
-      color: var(--accent);
-      margin-top: 2.5rem;
-    }
-
-    .faq-item {
-      margin-bottom: 1.5rem;
-    }
-
-    .faq-item strong {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: 600;
-    }
-
-    code {
-      background: #111;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-
-    a {
-      color: var(--link);
-      text-decoration: underline;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem 0;
-      font-size: 0.9rem;
-      color: #888;
-    }
+    :root { --bg:#000; --fg:#f5f5f5; --accent:#6a0dad; --link:#ffffff; }
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.6;}
+    header{position:fixed;top:0;left:0;right:0;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);z-index:999;display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.25rem;}
+    .brand{font-size:1.2rem;font-weight:600;letter-spacing:.05em;}
+    nav a{margin-left:1rem;color:var(--link);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;transition:border .2s ease;}
+    nav a:hover{border-color:var(--accent);}  
+    main{max-width:900px;margin:6rem auto 3rem;padding:0 1.2rem;}
+    h1{text-align:center;font-size:2rem;margin-bottom:2rem;}
+    h2{font-size:1.4rem;color:var(--accent);margin-top:2.5rem;}
+    details{background:#111;border:1px solid #222;border-radius:6px;margin:.8rem 0;}
+    summary{cursor:pointer;padding:.8rem 1rem;font-weight:600;}
+    details[open] summary{color:var(--accent);}  
+    details div{padding:0 1rem 1rem 1rem;font-size:.95rem;}
+    code{background:#111;padding:.2rem .4rem;border-radius:4px;font-family:monospace;}
+    a{color:var(--link);text-decoration:underline;}
+    a:hover{color:var(--accent);}  
+    .lang-toggle{margin-top:1rem;text-align:right;}
+    .lang-toggle button{background:#111;color:var(--fg);border:1px solid #333;border-radius:4px;padding:.3rem .6rem;font-size:.8rem;cursor:pointer;margin-left:.4rem;}
+    .lang-toggle button.active{background:var(--accent);}  
+    footer{text-align:center;padding:2rem 0;font-size:.9rem;color:#888;}
   </style>
 </head>
 <body>
-
   <header>
     <div class="brand">Episteme</div>
     <nav>
@@ -112,48 +39,72 @@
   </header>
 
   <main>
-    <h1>Help & Documentation</h1>
+    <h1 id="title">Help & Documentation</h1>
 
-    <h2>Frequently Asked Questions (FAQ)</h2>
-
-    <div class="faq-item">
-      <strong>What is Episteme?</strong>
-      Episteme is a student-created platform that offers open-source physics simulations to help students and enthusiasts explore theoretical models, numerical solutions, and visualizations.
+    <div class="lang-toggle">
+      <span>Select language:</span>
+      <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+      <button id="btn-es" onclick="setLang('es')">ES</button>
     </div>
 
-    <div class="faq-item">
-      <strong>Do I need to install anything to run the simulations?</strong>
-      Most simulations are written in Python and require Python 3 and packages like <code>matplotlib</code>, <code>numpy</code>, or <code>scipy</code>. Some are fully interactive in-browser using JavaScript.
-    </div>
+    <!-- FAQ Section -->
+    <h2 data-en="Frequently Asked Questions (FAQ)" data-es="Preguntas Frecuentes (FAQ)">Frequently Asked Questions (FAQ)</h2>
 
-    <div class="faq-item">
-      <strong>Can I suggest a simulation or contribute?</strong>
-      Absolutely! Head over to the <a href="contact.html">Contact</a> page and send in your idea — whether it's a concept, an improvement, or a bug fix.
-    </div>
+    <details>
+      <summary data-en="What is Episteme?" data-es="¿Qué es Episteme?">What is Episteme?</summary>
+      <div data-en="Episteme is an open‑source hub of physics simulations for students and enthusiasts." data-es="Episteme es una plataforma de simulaciones de física de código abierto para estudiantes y entusiastas."></div>
+    </details>
 
-    <div class="faq-item">
-      <strong>Are these simulations accurate?</strong>
-      All simulations are built with the intention to reflect ideal theoretical or numerical models. Some are simplified or scaled for visualization and learning purposes.
-    </div>
+    <details>
+      <summary data-en="Do I need to install anything?" data-es="¿Necesito instalar algo?">Do I need to install anything?</summary>
+      <div data-en="Most simulations run with Python 3 and libraries like numpy & matplotlib, or directly in the browser." data-es="La mayoría de las simulaciones se ejecutan con Python 3 y bibliotecas como numpy y matplotlib, o directamente en el navegador."></div>
+    </details>
 
-    <div class="faq-item">
-      <strong>Is this content free to use?</strong>
-      Yes, everything on Episteme is open-source and free for educational or personal use.
-    </div>
+    <details>
+      <summary data-en="Can I suggest a simulation?" data-es="¿Puedo sugerir una simulación?">Can I suggest a simulation?</summary>
+      <div data-en="Yes! Contact us through the Contact page and share your idea." data-es="¡Sí! Contáctanos a través de la página de contacto y comparte tu idea."></div>
+    </details>
 
-    <h2>How to Use the Source Code</h2>
-    <p>Each project page includes a download link or in-browser code viewer. You can:</p>
+    <details>
+      <summary data-en="Is everything free to use?" data-es="¿Todo es gratis?">Is everything free to use?</summary>
+      <div data-en="All content is free for educational and personal use under an open‑source license." data-es="Todo el contenido es gratuito para uso educativo y personal bajo una licencia de código abierto."></div>
+    </details>
+
+    <!-- How to Use Code -->
+    <h2 data-en="How to Use the Source Code" data-es="Cómo usar el código fuente">How to Use the Source Code</h2>
+    <p data-en="Each project page includes a download link. Follow these steps:" data-es="Cada página de proyecto incluye un enlace de descarga. Sigue estos pasos:"></p>
     <ul>
-      <li>Download the <code>.py</code> file and open it in a Python IDE (like Thonny, VSCode, or PyCharm).</li>
-      <li>Ensure you have Python 3 installed on your machine. If not, download it from <a href="https://www.python.org/">python.org</a>.</li>
-      <li>Install required libraries using <code>pip</code>. Example: <code>pip install numpy matplotlib</code></li>
-      <li>Run the script in your terminal or IDE. Most simulations will generate visualizations or animation windows.</li>
+      <li data-en="Download the <code>.py</code> file." data-es="Descarga el archivo <code>.py</code>."></li>
+      <li data-en="Install requirements: <code>pip install numpy matplotlib</code>." data-es="Instala los requisitos: <code>pip install numpy matplotlib</code>."></li>
+      <li data-en="Run from command line: <code>python simulation.py</code>." data-es="Ejecuta desde la línea de comandos: <code>python simulation.py</code>."></li>
+      <li data-en="For JS simulations, just open the HTML in your browser." data-es="Para simulaciones JS, simplemente abre el HTML en tu navegador."></li>
     </ul>
-    <p>For browser-based simulations, simply click the "View Simulation" button. These do not require downloads or installation.</p>
+
+    <!-- Command-line Help -->
+    <h2 data-en="Command‑Line Help" data-es="Ayuda de línea de comandos">Command‑Line Help</h2>
+    <p data-en="Open a terminal (cmd, PowerShell, or bash) in the simulation folder and run:" data-es="Abre una terminal (cmd, PowerShell o bash) en la carpeta de la simulación y ejecuta:"></p>
+    <pre><code>python simulation.py --help
+</code></pre>
+    <p data-en="Many scripts accept flags (e.g., <code>--steps 5000</code>) to tweak parameters." data-es="Muchos scripts aceptan flags (por ejemplo, <code>--steps 5000</code>) para ajustar parámetros."></p>
+
+    <!-- Contribute Guide -->
+    <h2 data-en="Contribute" data-es="Contribuir">Contribute</h2>
+    <p data-en="We welcome pull requests! Fork the GitHub repo, add your simulation, and open a PR." data-es="¡Aceptamos pull requests! Haz fork del repositorio en GitHub, agrega tu simulación y abre una PR."></p>
+    <p><a href="https://github.com/your-repo">GitHub Repository →</a></p>
   </main>
 
   <footer>
-    © 2025 Episteme | Built for open learning – last updated July 2025
+    © 2025 Episteme | Last Update: July, 2025
   </footer>
+
+  <script>
+    function setLang(lang){
+      ['btn-en','btn-es'].forEach(id=>document.getElementById(id).classList.toggle('active', id==='btn-'+lang));
+      document.querySelectorAll('[data-en]').forEach(el=>{
+        el.innerHTML = lang==='es'? el.getAttribute('data-es') : el.getAttribute('data-en');
+      });
+      document.documentElement.lang = lang;
+    }
+  </script>
 </body>
 </html>
