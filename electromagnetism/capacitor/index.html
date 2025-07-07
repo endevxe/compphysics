@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RC Circuit – Capacitor Charging & Discharging</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script type="text/javascript" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       background-color: #000;
       color: #f5f5f5;
       font-family: system-ui, sans-serif;
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 4rem 1rem;
       line-height: 1.6;
@@ -39,6 +38,18 @@
       border-radius: 4px;
       font-size: 0.95em;
     }
+    label, input {
+      display: inline-block;
+      margin: 0.3rem 0.6rem 1rem 0;
+    }
+    input[type=range] {
+      width: 200px;
+    }
+    canvas {
+      background: #111;
+      border: 1px solid #333;
+      margin: 2rem 0;
+    }
   </style>
 </head>
 <body>
@@ -47,43 +58,104 @@
 
   <h2>1. Overview</h2>
   <p>
-    An <strong>RC circuit</strong> consists of a resistor (R) and a capacitor (C) connected in series. When a voltage source is applied, the capacitor charges through the resistor, and when the source is removed, it discharges. The behavior of the voltage across the capacitor is characterized by the <strong>time constant</strong>:
+    An <strong>RC circuit</strong> consists of a resistor (R) and a capacitor (C) connected in series. The voltage across the capacitor during charging or discharging follows an exponential behavior determined by the <strong>time constant</strong>:
   </p>
   <p style="text-align:center; font-size:1.2rem;">
     \[ \tau = RC \]
   </p>
 
-  <h2>2. Charging Equation</h2>
-  <p>
-    The voltage across the capacitor when charging is given by:
-  </p>
-  <p style="text-align:center;">
-    \[ V_{\text{charge}}(t) = V_0 \left(1 - e^{-t/\tau} \right) \]
-  </p>
-  <p>
-    At time \( t = \tau \), the voltage reaches about 63% of the maximum value \( V_0 \).
-  </p>
+  <h2>2. Interactive Simulation</h2>
+  <p>Adjust the values below to see how the capacitor behaves in different circuits:</p>
 
-  <h2>3. Discharging Equation</h2>
-  <p>
-    When the source is removed, the capacitor discharges following:
-  </p>
-  <p style="text-align:center;">
-    \[ V_{\text{discharge}}(t) = V_0 e^{-t/\tau} \]
-  </p>
-  <p>
-    After one time constant, the voltage falls to about 37% of its initial value.
-  </p>
+  <label for="R">Resistance R (Ω): <span id="Rval">1000</span></label>
+  <input type="range" id="R" min="100" max="10000" step="100" value="1000">
 
-  <h2>4. Python Simulation</h2>
-  <p>
-    The simulation uses basic NumPy and Matplotlib functions to numerically evaluate the charging and discharging behavior. The time constant \( \tau \) is marked on the plot for visual understanding.
-  </p>
+  <label for="C">Capacitance C (μF): <span id="Cval">1.0</span></label>
+  <input type="range" id="C" min="0.1" max="10" step="0.1" value="1">
 
+  <label for="V0">Voltage V₀ (V): <span id="V0val">5.0</span></label>
+  <input type="range" id="V0" min="1" max="10" step="0.1" value="5">
+
+  <canvas id="rcChart" width="800" height="400"></canvas>
+
+  <script>
+    const ctx = document.getElementById('rcChart').getContext('2d');
+    let chart;
+
+    function updateChart() {
+      const R = +document.getElementById('R').value;
+      const C = +document.getElementById('C').value * 1e-6;
+      const V0 = +document.getElementById('V0').value;
+
+      document.getElementById('Rval').textContent = R;
+      document.getElementById('Cval').textContent = (C * 1e6).toFixed(1);
+      document.getElementById('V0val').textContent = V0;
+
+      const tau = R * C;
+      const t = Array.from({length: 300}, (_, i) => i * tau / 50);
+      const charge = t.map(time => V0 * (1 - Math.exp(-time / tau)));
+      const discharge = t.map(time => V0 * Math.exp(-time / tau));
+
+      const data = {
+        labels: t.map(x => (x * 1000).toFixed(1)),
+        datasets: [
+          {
+            label: 'Charging (V)',
+            data: charge,
+            borderColor: '#6a0dad',
+            fill: false,
+            tension: 0.2
+          },
+          {
+            label: 'Discharging (V)',
+            data: discharge,
+            borderColor: '#ffffff',
+            fill: false,
+            tension: 0.2
+          }
+        ]
+      };
+
+      const config = {
+        type: 'line',
+        data,
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {display: true, text: 'Time (ms)', color: '#aaa'},
+              ticks: { color: '#aaa' }
+            },
+            y: {
+              title: {display: true, text: 'Voltage (V)', color: '#aaa'},
+              ticks: { color: '#aaa' },
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: { labels: { color: '#ccc' } }
+          }
+        }
+      };
+
+      if(chart) chart.destroy();
+      chart = new Chart(ctx, config);
+    }
+
+    ['R', 'C', 'V0'].forEach(id => document.getElementById(id).addEventListener('input', updateChart));
+    updateChart();
+  </script>
+
+  <h2>3. Equations</h2>
+  <p>Charging:</p>
+  <p style="text-align:center;">\[ V_{\text{charge}}(t) = V_0 (1 - e^{-t/\tau}) \]</p>
+  <p>Discharging:</p>
+  <p style="text-align:center;">\[ V_{\text{discharge}}(t) = V_0 e^{-t/\tau} \]</p>
+
+  <h2>4. Python Version</h2>
+  <p>Prefer offline use? Download the script below to generate plots locally:</p>
   <p><a href="capacitor_rc.py" target="_blank">capacitor_rc.py (source)</a></p>
 
-  <h2>5. Back to Homepage</h2>
-  <p><a href="../../index.html">← Return to main page</a></p>
-
+  <p><a href="../../index.html">← Back to Home</a></p>
 </body>
 </html>
