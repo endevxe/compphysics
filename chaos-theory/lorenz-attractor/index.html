@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lorenz Attractor – Episteme</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      background: #000;
+      color: #f5f5f5;
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #fff;
+      border-bottom: 1px solid #222;
+      padding-bottom: 0.4rem;
+    }
+    a {
+      color: #6a0dad;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    p {
+      margin-bottom: 1.2rem;
+    }
+    #plot {
+      width: 100%;
+      height: 500px;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lorenz Attractor</h1>
+
+  <h2>1. Introduction</h2>
+  <p>
+    The Lorenz system is a set of three coupled nonlinear differential equations originally developed to model atmospheric convection. Despite its simplicity, it exhibits deterministic chaos — sensitive dependence on initial conditions — and is a cornerstone example in chaos theory.
+  </p>
+
+  <h2>2. Equations</h2>
+  <p>
+    The Lorenz equations are:
+  </p>
+  <p>
+    \[
+    \begin{aligned}
+    \frac{dx}{dt} &= \sigma (y - x) \\
+    \frac{dy}{dt} &= x (\rho - z) - y \\
+    \frac{dz}{dt} &= xy - \beta z
+    \end{aligned}
+    \]
+  </p>
+  <p>
+    where \( \sigma = 10 \), \( \rho = 28 \), and \( \beta = 8/3 \) are standard parameters that lead to chaotic behavior.
+  </p>
+
+  <h2>3. Visualization</h2>
+  <p>
+    The trajectory traced out in 3D space shows a butterfly‑shaped attractor. The path never crosses itself but stays within a bounded region, constantly folding and stretching in a way that appears random but is fully deterministic.
+  </p>
+  <div id="plot"></div>
+
+  <h2>4. Python Simulation</h2>
+  <p>
+    This Python script numerically integrates the Lorenz equations using a Runge–Kutta method and plots the 3D attractor:
+  </p>
+  <p><a href="lorenz_attractor.py" target="_blank">lorenz_attractor.py (source)</a></p>
+
+  <h2>5. Applications</h2>
+  <p>
+    The Lorenz system helped launch the field of chaos theory and has applications in meteorology, fluid dynamics, electrical circuits, and beyond.
+  </p>
+
+  <p><a href="../../index.html">← Back to Home</a></p>
+
+  <script>
+    const sigma = 10, rho = 28, beta = 8/3;
+    const dt = 0.01, steps = 5000;
+    let x = 0.01, y = 0, z = 0;
+    let xs = [], ys = [], zs = [];
+
+    for (let i = 0; i < steps; i++) {
+      xs.push(x); ys.push(y); zs.push(z);
+      const dx = sigma * (y - x);
+      const dy = x * (rho - z) - y;
+      const dz = x * y - beta * z;
+      x += dx * dt;
+      y += dy * dt;
+      z += dz * dt;
+    }
+
+    Plotly.newPlot('plot', [{
+      type: 'scatter3d',
+      mode: 'lines',
+      x: xs, y: ys, z: zs,
+      line: { width: 2, color: '#6a0dad' }
+    }], {
+      margin: { t: 0 },
+      scene: {
+        xaxis: { title: 'X' },
+        yaxis: { title: 'Y' },
+        zaxis: { title: 'Z' },
+        bgcolor: '#000'
+      },
+      paper_bgcolor: '#000',
+      font: { color: '#f5f5f5' }
+    });
+  </script>
+</body>
+</html>
