@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monte Carlo Error Propagation – Episteme</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body {
+      background: #000;
+      color: #f5f5f5;
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #fff;
+      border-bottom: 1px solid #222;
+      padding-bottom: 0.4rem;
+    }
+    a {
+      color: #6a0dad;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    p {
+      margin-bottom: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monte Carlo Error Propagation</h1>
+
+  <h2>1. Motivation</h2>
+  <p>
+    When quantities with uncertainties are combined mathematically, the resulting uncertainty in the final value can be difficult to estimate analytically — especially for nonlinear formulas. Monte Carlo methods make this easy by simulating many possible outcomes based on the distributions of input variables.
+  </p>
+
+  <h2>2. Example Problem</h2>
+  <p>
+    Suppose we want to calculate the area \( A = L \times W \) of a rectangle. If we know:
+  </p>
+  <ul>
+    <li>Length: \( L = 10.0 \pm 0.5 \ \text{cm} \)</li>
+    <li>Width: \( W = 4.0 \pm 0.2 \ \text{cm} \)</li>
+  </ul>
+  <p>
+    We sample \( L \) and \( W \) values from normal distributions and compute \( A \) for each sample. After thousands of trials, the standard deviation of the results gives the uncertainty in area.
+  </p>
+
+  <h2>3. How It Works</h2>
+  <p>
+    For each trial:
+    <ol>
+      <li>Randomly pick a length \( L_i \sim \mathcal{N}(10.0, 0.5) \)</li>
+      <li>Randomly pick a width \( W_i \sim \mathcal{N}(4.0, 0.2) \)</li>
+      <li>Calculate area: \( A_i = L_i \times W_i \)</li>
+    </ol>
+    The full set \( \{A_i\} \) approximates the distribution of the true area.
+  </p>
+
+  <h2>4. Python Demo</h2>
+  <p>
+    This script performs the simulation and plots the histogram of the sampled areas. It also prints the mean and standard deviation:
+  </p>
+  <p><a href="monte-carlo-error.py" target="_blank">monte-carlo-error.py (source)</a></p>
+
+  <h2>5. Applications</h2>
+  <p>
+    Monte Carlo error propagation is used in physics experiments, lab analysis, and any scientific calculation where complex dependencies or nonlinear relationships make analytical uncertainty propagation impractical.
+  </p>
+
+  <p><a href="../../index.html">← Back to Home</a></p>
+</body>
+</html>
