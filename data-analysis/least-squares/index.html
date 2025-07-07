@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Least‑Squares Fitting – Episteme</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body{background:#000;color:#f5f5f5;font-family:system-ui,sans-serif;line-height:1.6;max-width:800px;margin:0 auto;padding:4rem 1rem;}
+    h1,h2{color:#fff;border-bottom:1px solid #222;padding-bottom:0.4rem;}
+    a{color:#6a0dad;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+    p{margin-bottom:1.2rem;}
+  </style>
+</head>
+<body>
+  <h1>Least‑Squares Fitting</h1>
+
+  <h2>1. Purpose</h2>
+  <p>
+    Least‑squares fitting estimates the parameters of a model that best describes data containing noise. By minimising the sum of squared residuals
+    \( S = \sum (y_i - f(x_i;\,\theta))^2 \), the method finds the parameter set \(\theta\) that brings the model curve closest to the data points.
+  </p>
+
+  <h2>2. Linear Model Example</h2>
+  <p>
+    For a straight‑line model \( y = mx + b \), the optimal slope and intercept are found analytically or via numerical routines (e.g.&nbsp;<code>numpy.polyfit</code>). The residual for each point is the vertical distance between the datum and the fitted line.
+  </p>
+
+  <h2>3. Error Metrics</h2>
+  <p>
+    <strong>RMSE</strong> (root‑mean‑square error) summarises residual magnitudes: \( \text{RMSE}=\sqrt{\langle r^2 \rangle}\). <strong>R²</strong> (coefficient of determination) measures how much variance the model explains: \( R^2 = 1 - S/S_{\text{tot}} \).
+  </p>
+
+  <h2>4. Python Demo</h2>
+  <p>
+    The script below generates noisy linear data, performs the fit, plots the data with the best‑fit line, and shows residuals along with RMSE and R².
+  </p>
+  <p><a href="least_squares_fit.py" target="_blank">least_squares_fit.py (source)</a></p>
+
+  <h2>5. Beyond Linear</h2>
+  <p>
+    Change the model function to fit nonlinear relationships — for example, exponentials or polynomials — by using <code>scipy.optimize.curve_fit</code>.
+  </p>
+
+  <p><a href="../../index.html">← Back to Home</a></p>
+</body>
+</html>
