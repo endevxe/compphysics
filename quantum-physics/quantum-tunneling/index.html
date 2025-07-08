@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Tunnelling Through a Barrier | Episteme</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    :root { --bg:#000; --fg:#f5f5f5; --accent:#6a0dad; }
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.6;max-width:900px;margin:0 auto;padding:4rem 1rem;}
+    h1,h2{color:var(--accent);margin-top:0;}
+    h1{font-size:1.8rem;margin-bottom:1.5rem;}
+    h2{font-size:1.3rem;margin-top:2rem;}
+    a{color:var(--accent);} a:hover{text-decoration:underline;}
+    code{background:#111;padding:.2rem .4rem;border-radius:4px;}
+    #controls{margin:1.5rem 0;text-align:center;}
+    #plot{width:100%;height:480px;}
+    label{font-weight:600;margin-right:.4rem;}
+    input[type=range]{width:60%;max-width:400px;}
+    .value{font-weight:600;color:#ccc;}
+  </style>
+</head>
+<body>
+  <h1>Quantum Tunnelling Through a Finite Barrier</h1>
+
+  <h2>1. Physical Setup</h2>
+  <p>A particle with energy \(E\) approaches a one‑dimensional rectangular potential barrier of height \(V_0\) and width \(a\). Classically, if \(E < V_0\) the particle would be reflected. Quantum mechanics allows a finite probability of transmission — <em>tunnelling</em>.</p>
+
+  <h2>2. Transmission Coefficient</h2>
+  <div id="controls">
+    <label for="energy">Energy E:</label>
+    <input type="range" id="energy" min="0.05" max="2" step="0.01" value="0.5">
+    <span class="value" id="Eval">0.50</span>
+    <span style="margin-left:1rem;">Transmission \(T(E) = \)<span class="value" id="Tval">—</span></span>
+  </div>
+  <div id="plot"></div>
+
+  <h2>3. Python Version</h2>
+  <p>Download the standalone script:</p>
+  <p><a href="quantum_tunneling.py" target="_blank">quantum_tunneling.py (source)</a></p>
+
+  <p style="margin-top:2rem;"><a href="../index.html">← Back to Quantum Mechanics</a></p>
+
+  <script>
+    const V0 = 1.0, a = 1.0;
+    const energies = Array.from({length:400},(_,i)=>0.01 + i*0.005);
+    function computeT(E){
+      if(E < V0){
+        const kappa = Math.sqrt(2*(V0-E));
+        const num = V0*V0 * Math.sinh(kappa*a)**2;
+        const den = 4*E*(V0-E);
+        return 1/(1+num/den);
+      }else{
+        const k2 = Math.sqrt(2*(E-V0));
+        const num = V0*V0 * Math.sin(k2*a)**2;
+        const den = 4*E*(E-V0);
+        return 1/(1+num/den);
+      }
+    }
+
+    const Tvals = energies.map(computeT);
+
+    const baseTrace = {x:energies,y:Tvals,mode:'lines',name:'T(E)',line:{color:'#6a0dad'}};
+    const markerTrace = {x:[0.5],y:[computeT(0.5)],mode:'markers',name:'E',marker:{size:8,color:'#ffffff'}};
+
+    Plotly.newPlot('plot',[baseTrace,markerTrace],{
+      margin:{t:20},xaxis:{title:'Energy E'},yaxis:{title:'Transmission',range:[0,1]},paper_bgcolor:'#000',plot_bgcolor:'#000',font:{color:'#f5f5f5'}
+    });
+
+    const ESlider = document.getElementById('energy');
+    const Eval   = document.getElementById('Eval');
+    const Tval   = document.getElementById('Tval');
+    function update(){
+      const E = parseFloat(ESlider.value);
+      const T = computeT(E);
+      Eval.textContent = E.toFixed(2);
+      Tval.textContent = T.toFixed(3);
+      Plotly.restyle('plot',{'x[[1]]':[ [E] ],'y[[1]]':[ [T] ]});
+    }
+    ESlider.addEventListener('input',update);
+    update();
+  </script>
+</body>
+</html>
