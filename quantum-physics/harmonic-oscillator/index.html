@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Harmonic Oscillator | Episteme</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    :root{--bg:#000;--fg:#f5f5f5;--accent:#6a0dad;}
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.6;max-width:900px;margin:0 auto;padding:4rem 1rem;}
+    h1,h2{color:var(--accent);} h1{font-size:1.8rem;margin-top:0;} h2{font-size:1.3rem;margin-top:2rem;}
+    a{color:var(--accent);} a:hover{text-decoration:underline;}
+    #slider{width:60%;max-width:400px;margin-top:1rem;}
+    #plot{width:100%;height:500px;}
+    label{font-weight:600;}
+    .val{font-weight:600;color:#ccc;}
+    code{background:#111;padding:.2rem .4rem;border-radius:4px;}
+  </style>
+</head>
+<body>
+  <h1>Quantum Harmonic Oscillator Eigenstates</h1>
+
+  <p>The harmonic oscillator potential is \(V(x)=\tfrac12 m\omega^2 x^2\). Setting \(\hbar = m = \omega = 1\), the eigenenergies are \(E_n = n + \tfrac12\) and the eigenfunctions involve Hermite polynomials.</p>
+
+  <h2>Interactive Wavefunctions</h2>
+  <label for="n">Quantum number n:</label>
+  <input type="range" id="n" min="0" max="6" step="1" value="0"/>
+  <span class="val" id="nval">0</span>
+  <span style="margin-left:1rem;">Energy \(E_n = \)<span class="val" id="Eval">0.5</span></span>
+
+  <div id="plot"></div>
+
+  <h2>Python Version</h2>
+  <p><a href="harmonic_oscillator.py" target="_blank">harmonic_oscillator.py (source)</a></p>
+  <p><a href="../index.html">← Back to Quantum Mechanics</a></p>
+
+  <script>
+    // Hermite polynomial (recursive)
+    function H(n,x){
+      if(n===0) return 1;
+      if(n===1) return 2*x;
+      let Hn1=2*x, Hn2=1, Hn;
+      for(let k=2;k<=n;k++){
+        Hn = 2*x*Hn1 - 2*(k-1)*Hn2;
+        Hn2 = Hn1; Hn1 = Hn;
+      }
+      return Hn;
+    }
+    const xs = Array.from({length:800},(_,i)=>-4+8*i/799);
+    function psi(n){
+      const norm = 1/Math.sqrt(Math.pow(2,n)*factorial(n)*Math.sqrt(Math.PI));
+      return xs.map(x=>norm*Math.exp(-x*x/2)*H(n,x));
+    }
+    function factorial(n){return n? n*factorial(n-1):1;}
+    // initial plot
+    let n=0;
+    Plotly.newPlot('plot',[{x:xs,y:psi(0),mode:'lines',line:{color:'#6a0dad'},name:'ψ₀'}],{
+      margin:{t:20},xaxis:{title:'x'},yaxis:{title:'ψ_n(x)'},paper_bgcolor:'#000',plot_bgcolor:'#000',font:{color:'#f5f5f5'}
+    });
+    const nSlider=document.getElementById('n');
+    const nval=document.getElementById('nval');
+    const Eval=document.getElementById('Eval');
+    function update(){
+      n=parseInt(nSlider.value);
+      nval.textContent=n;
+      Eval.textContent=(n+0.5).toFixed(1);
+      Plotly.animate('plot',{data:[{x:xs,y:psi(n),name:`ψ_${n}`}]},{transition:{duration:0},frame:{duration:0,redraw:true}});
+    }
+    nSlider.addEventListener('input',update);
+  </script>
+</body>
+</html>
