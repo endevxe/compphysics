@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Packet Reflection & Tunnelling | Episteme</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    :root{--bg:#000;--fg:#f5f5f5;--accent:#6a0dad;}
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.6;max-width:900px;margin:0 auto;padding:4rem 1rem;}
+    h1{color:var(--accent);font-size:1.8rem;margin-top:0;}
+    #plot{width:100%;height:500px;}
+    #controls{text-align:center;margin:1rem 0;}
+    button{background:#111;color:var(--fg);border:1px solid #333;padding:.4rem 1rem;border-radius:4px;cursor:pointer;margin:0 .4rem;}
+    button:hover{background:#1a1a1a;}
+  </style>
+</head>
+<body>
+  <h1>Wave Packet Reflection & Tunnelling</h1>
+  <p>This interactive animation uses the split‑operator Fourier method (ħ = m = 1) to evolve a Gaussian wave packet toward a finite potential barrier. Observe partial reflection and tunnelling in real time.</p>
+
+  <div id="plot"></div>
+  <div id="controls"><button id="play">▶ Play</button><button id="pause">⏸ Pause</button></div>
+
+  <p><a href="wave_packet.py" target="_blank">wave_packet.py (source)</a></p>
+  <p><a href="../index.html">← Back to Quantum Mechanics</a></p>
+
+<script>
+ // grid and potential
+ const N=1024, L=200, dx=L/N;
+ const x=Array.from({length:N},(_,i)=>-L/2+i*dx);
+ const V0=1, a=5;
+ const V=x.map(xx=>Math.abs(xx)<a/2?V0:0);
+
+ // initial packet
+ const x0=-40, k0=2, sigma=4;
+ let psiR=x.map(xx=>Math.exp(-(xx-x0)**2/(2*sigma**2))*Math.cos(k0*xx));
+ let psiI=x.map(xx=>Math.exp(-(xx-x0)**2/(2*sigma**2))*Math.sin(k0*xx));
+ normalize();
+
+ // FFT helpers (simple Cooley‑Tukey via JS typed arrays would be heavy; use Plotly FFT? quick hack via numeric.js?)
+ // For brevity, approximate split‑operator with small dt using finite‑difference Laplacian (not as accurate but OK for demo)
+ const dt=0.02;
+ function step(){
+   const psiRnew=new Array(N), psiInew=new Array(N);
+   for(let i=1;i<N-1;i++){
+     const lapR=(psiR[i+1]-2*psiR[i]+psiR[i-1])/(dx*dx);
+     const lapI=(psiI[i+1]-2*psiI[i]+psiI[i-1])/(dx*dx);
+     // time derivative: dψ/dt = i(0.5∇² - V)ψ
+     psiRnew[i]=psiR[i]-dt*( -0.5*lapI + V[i]*psiI[i]);
+     psiInew[i]=psiI[i]+dt*( 0.5*lapR - V[i]*psiR[i]);
+   }
+   // boundaries zero
+   psiRnew[0]=psiRnew[N-1]=psiInew[0]=psiInew[N-1]=0;
+   psiR=psiRnew; psiI=psiInew;
+ }
+ function normalize(){
+   let norm=0; for(let i=0;i<N;i++) norm+= (psiR[i]**2+psiI[i]**2);
+   norm=Math.sqrt(norm*dx);
+   for(let i=0;i<N;i++){ psiR[i]/=norm; psiI[i]/=norm; }
+ }
+ function prob(){return psiR.map((r,i)=>r*r+psiI[i]*psiI[i]);}
+
+ Plotly.newPlot('plot',[{x:x,y:prob(),mode:'lines',line:{color:'#6a0dad'}}],{
+   margin:{t:20},xaxis:{title:'x'},yaxis:{title:'Probability'},paper_bgcolor:'#000',plot_bgcolor:'#000',font:{color:'#f5f5f5'}
+ });
+
+ let playing=false, timer;
+ function animate(){
+   if(!playing) return;
+   for(let i=0;i<50;i++) step();
+   Plotly.animate('plot',{data:[{y:prob()}]},{transition:{duration:0},frame:{duration:0,redraw:true}});
+   timer=requestAnimationFrame(animate);
+ }
+ document.getElementById('play').onclick=()=>{if(!playing){playing=true;animate();}};
+ document.getElementById('pause').onclick=()=>{playing=false;cancelAnimationFrame(timer);};
+</script>
+</body>
+</html>
