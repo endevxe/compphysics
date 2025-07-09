@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>1‑D Wave Equation | Episteme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root { --bg:#000; --fg:#f5f5f5; --accent:#6a0dad; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      padding: 4rem 1rem;
+      margin: 0 auto;
+    }
+    h1, h2 { color: var(--accent); }
+    a      { color: var(--fg); text-decoration: underline; }
+    a:hover{ color: #c299ff; }
+    iframe { width: 100%; height: 520px; border: none; }
+  </style>
+</head>
+<body>
+
+<h1>1‑D Wave Equation Simulation</h1>
+<p>
+  This demo solves the classical wave equation on a string with fixed ends using a
+  finite‑difference scheme (Courant‑Friedrichs‑Lewy stable).  
+  Play the animation to see the Gaussian pulse propagate, reflect, and superpose.
+</p>
+
+<h2>Interactive Animation</h2>
+<iframe src="wave_equation.html"></iframe>
+
+<h2>Download / Source</h2>
+<ul>
+  <li><a href="wave_equation.html" target="_blank">wave_equation.html</a></li>
+  <li><a href="wave_equation.py"  target="_blank">wave_equation.py</a></li>
+</ul>
+
+<p><a href="../../index.html">← Back to Waves & Optics</a></p>
+
+</body>
+</html>
