@@ -4,11 +4,47 @@
   <meta charset="UTF-8">
   <title>Central Force Motion</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript" async
     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
-    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+    body {
+      font-family: system-ui, sans-serif;
+      background: #000;
+      color: #f5f5f5;
+      max-width: 800px;
+      margin: 2rem auto;
+      line-height: 1.6;
+    }
+    code {
+      background: #111;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    h1, h2 {
+      color: #6a0dad;
+    }
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #c299ff;
+    }
+    #orbitPlot {
+      width: 100%;
+      height: 500px;
+      margin-top: 1rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      margin-top: 1rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
@@ -60,6 +96,72 @@
   The system is solved numerically using the 4th-order Runge–Kutta method. 
   This allows us to explore arbitrary orbits, including ones with complex initial conditions.
 </p>
+
+<!-- Interactive Orbit Plot -->
+<h2>Interactive Simulation</h2>
+<p>
+  Adjust the initial speed to explore elliptical, parabolic, and hyperbolic trajectories.
+</p>
+<label for="speed">Initial Speed \( v_0 \): <span id="speedVal">1.5</span></label>
+<input type="range" id="speed" min="0.5" max="3.0" step="0.05" value="1.5" />
+
+<div id="orbitPlot"></div>
+
+<script>
+function simulateOrbit(v0) {
+  const G = 1, M = 1, dt = 0.01, steps = 3000;
+  let x = 1, y = 0;
+  let vx = 0, vy = v0;
+
+  const xData = [], yData = [];
+  for (let i = 0; i < steps; i++) {
+    const r = Math.sqrt(x * x + y * y);
+    const ax = -G * M * x / (r ** 3);
+    const ay = -G * M * y / (r ** 3);
+
+    vx += ax * dt;
+    vy += ay * dt;
+    x += vx * dt;
+    y += vy * dt;
+
+    xData.push(x);
+    yData.push(y);
+  }
+
+  Plotly.newPlot('orbitPlot', [{
+    x: xData,
+    y: yData,
+    mode: 'lines',
+    line: { color: '#6a0dad' },
+    name: 'Orbit'
+  }, {
+    x: [0],
+    y: [0],
+    mode: 'markers',
+    marker: { color: 'white', size: 8 },
+    name: 'Star'
+  }], {
+    title: '',
+    paper_bgcolor: '#000',
+    plot_bgcolor: '#000',
+    xaxis: { title: 'x', color: '#f5f5f5' },
+    yaxis: { title: 'y', color: '#f5f5f5' },
+    font: { color: '#f5f5f5' },
+    margin: { t: 20 }
+  });
+}
+
+const speedSlider = document.getElementById('speed');
+const speedLabel = document.getElementById('speedVal');
+
+speedSlider.addEventListener('input', () => {
+  const v = parseFloat(speedSlider.value);
+  speedLabel.textContent = v.toFixed(2);
+  simulateOrbit(v);
+});
+
+simulateOrbit(parseFloat(speedSlider.value));
+</script>
 
 <h2>5&nbsp;&middot;&nbsp;Source Code</h2>
 <p>
