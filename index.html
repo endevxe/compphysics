@@ -32,9 +32,21 @@
       padding: 0.75rem 1.25rem;
     }
     header .brand {
+      display: flex;
+      align-items: center;
+      color: var(--link);
+      text-decoration: none;
       font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: 0.05em;
+    }
+    header .brand:hover {
+      color: var(--accent);
+    }
+    header .brand img {
+      height: 32px;
+      margin-right: 0.5rem;
+      vertical-align: middle;
     }
     nav a {
       margin-left: 1rem;
@@ -149,7 +161,10 @@
 </head>
 <body>
   <header>
-    <div class="brand">Episteme</div>
+    <a href="#" class="brand" onclick="scrollToTop()">
+      <img src="logo.png" alt="Episteme Logo" style="height: 32px; vertical-align: middle; margin-right: 0.5rem;">
+      Episteme
+    </a>
     <nav>
       <a href="#simulations">Simulations</a>
       <a href="about.html">About</a>
@@ -327,6 +342,12 @@
     });
 
     window.addEventListener("load", resetSearch);
+  </script>
+
+  <script>
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
