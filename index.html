@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Episteme - Open Physics Simulations</title>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
   <style>
     :root {
       --bg: #000;
@@ -66,6 +67,35 @@
       color: #bbb;
     }
 
+    .search-bar {
+      text-align:center; 
+      margin-top:4rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .search-bar input {
+      padding:0.6rem 1rem;
+      width:80%;
+      max-width:400px;
+      border-radius:6px;
+      border:1px solid #333;
+      background:#111;
+      color:#f5f5f5;
+    }
+    .search-bar button {
+      padding: 0.6rem 1rem;
+      background: #222;
+      border: 1px solid #333;
+      color: #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .search-bar button:hover {
+      background: #333;
+      color: white;
+    }
+
     .container {
       max-width: 1000px;
       margin: 0 auto;
@@ -82,10 +112,12 @@
       padding: 1.5rem;
       transition: transform 0.3s ease, background 0.3s ease;
       cursor: pointer;
+      outline: none;
     }
-    .category-box:hover {
+    .category-box:hover, .category-box.highlighted {
       transform: scale(1.03);
       background: #1a1a1a;
+      box-shadow: 0 0 0 2px var(--accent);
     }
     .category-box h3 {
       margin-top: 0;
@@ -131,8 +163,9 @@
     <h2>Theoretical Models • Open Source • Documentation</h2>
   </section>
 
-  <div style="text-align:center; margin-top:4rem;">
-    <input id="search" type="text" placeholder="Search simulations…" style="padding:0.6rem 1rem; width:80%; max-width:400px; border-radius:6px; border:1px solid #333; background:#111; color:#f5f5f5;" />
+  <div class="search-bar">
+    <input id="search" type="text" placeholder="Search simulations…" />
+    <button onclick="resetSearch()">✖</button>
   </div>
 
   <main id="simulations" class="container">
@@ -206,17 +239,7 @@
       <p>Fitting, uncertainty, and error propagation.</p>
       <ul>
         <li><a href="data-analysis/least-squares/">Least Squares</a></li>
-        <li><a href="data-analysis/monte-carlo-error/">Monte Carlo Errors</a></li>
-      </ul>
-    </div>
-
-    <div class="category-box" onclick="location.href='numerical-methods/index.html'">
-      <h3>Numerical Methods</h3>
-      <p>Solvers and numerical algorithms.</p>
-      <ul>
-        <li><a href="numerical-methods/runge-kutta/">Runge-Kutta</a></li>
-      </ul>
-    </div>
+        <li><a href=
   </main>
 
   <footer>
@@ -224,32 +247,74 @@
   </footer>
 
   <script>
-    const searchInput = document.getElementById('search');
-    const boxes = Array.from(document.querySelectorAll('.category-box'));
+    const searchInput = document.getElementById("search");
+    const boxes = [...document.querySelectorAll(".category-box")];
+    const container = document.getElementById("simulations");
+    let currentIndex = -1;
 
-    function normalize(str) {
-      return str.toLowerCase().replace(/\s+/g, '');
-    }
+    const fuse = new Fuse(boxes.map(box => ({
+      el: box,
+      title: box.querySelector("h3")?.textContent || '',
+      desc: box.querySelector("p")?.textContent || '',
+      links: [...box.querySelectorAll("li")].map(li => li.textContent).join(" ")
+    })), {
+      keys: ["title", "desc", "links"],
+      threshold: 0.4
+    });
 
     function filterCategories() {
-      const query = normalize(searchInput.value);
-      
-      // Show all if empty
+      const query = searchInput.value.trim();
+      currentIndex = -1;
+      boxes.forEach(b => b.style.display = "none");
+
       if (!query) {
-        boxes.forEach(box => box.style.display = 'block');
+        boxes.forEach(b => b.style.display = "");
         return;
       }
 
-      boxes.forEach(box => {
-        const heading = box.querySelector('h3').textContent;
-        const description = box.querySelector('p').textContent;
-        const combined = normalize(heading + description);
-        box.style.display = combined.includes(query) ? 'block' : 'none';
-      });
+      const results = fuse.search(query);
+      results.forEach(r => r.item.el.style.display = "");
+
+      boxes.forEach(b => b.classList.remove("highlighted"));
+      if (results[0]) {
+        results[0].item.el.classList.add("highlighted");
+        currentIndex = 0;
+      }
     }
 
-    searchInput.addEventListener('input', filterCategories);
-    window.addEventListener('DOMContentLoaded', filterCategories);
+    function resetSearch() {
+      searchInput.value = "";
+      filterCategories();
+    }
+
+    function navigate(direction) {
+      const visible = boxes.filter(b => b.style.display !== "none");
+      if (visible.length === 0) return;
+
+      if (currentIndex >= 0) visible[currentIndex].classList.remove("highlighted");
+
+      if (direction === "down") currentIndex = (currentIndex + 1) % visible.length;
+      else if (direction === "up") currentIndex = (currentIndex - 1 + visible.length) % visible.length;
+
+      visible[currentIndex].classList.add("highlighted");
+      visible[currentIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function openSelected() {
+      const visible = boxes.filter(b => b.style.display !== "none");
+      if (currentIndex >= 0 && visible[currentIndex]) {
+        visible[currentIndex].click();
+      }
+    }
+
+    searchInput.addEventListener("input", filterCategories);
+    searchInput.addEventListener("keydown", e => {
+      if (e.key === "ArrowDown") { e.preventDefault(); navigate("down"); }
+      if (e.key === "ArrowUp") { e.preventDefault(); navigate("up"); }
+      if (e.key === "Enter") openSelected();
+    });
+
+    window.addEventListener("load", resetSearch);
   </script>
 </body>
 </html>
