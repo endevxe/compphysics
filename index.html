@@ -295,6 +295,7 @@
 
     function resetSearch() {
       searchInput.value = "";
+      boxes.forEach(b => b.classList.remove("highlighted"));
       filterCategories();
     }
 
