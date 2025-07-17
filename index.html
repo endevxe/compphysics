@@ -228,7 +228,21 @@
       cursor: pointer;
       font-size: 1rem;
     }
-    
+    #suggestion-modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 999;
+    border-radius: 8px;
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
   </style>
 </head>
 <body>
@@ -340,17 +354,23 @@
     
   </main>
   <!-- Suggest a Simulation Button and Modal -->
-  <button id="suggestion-btn">Suggest a Simulation</button>
-  
-  <div id="suggestion-modal">
-    <div class="modal-content">
-      <h3>Suggest a Simulation</h3>
-      <input id="suggestion-input" type="text" placeholder="Your idea..." />
-      <button onclick="submitSuggestion()">Submit</button>
+<button id="suggestion-btn">Suggest a Simulation</button>
+
+  <div id="suggestion-modal" style="display: none;">
+      <div class="modal-content">
+        <h3>Suggest a Simulation</h3>
+        <input id="suggestion-input" type="text" placeholder="Your idea..." />
+        <button onclick="submitSuggestion()">Submit</button>
+        <button onclick="closeModal()">Close</button>
+      </div>
     </div>
+    
+    <!-- Suggestions List -->
+    <div id="suggestion-list-container" style="margin-top: 1rem;">
+      <h3>Suggested Simulations</h3>
+      <ul id="suggestion-list"></ul>
   </div>
   
-  <!-- Suggestions List -->
   <div id="suggestion-list" class="container"></div>
   <footer>
     © 2025 Episteme | Last Update: July, 2025
@@ -442,36 +462,103 @@
     btn.onclick = () => modal.style.display = "flex";
     modal.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
   
+    // Submit a suggestion
     function submitSuggestion() {
       const idea = input.value.trim();
       if (!idea) return;
       const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
-      suggestions.push({ idea, votes: 0 });
+      suggestions.push({ idea, votes: 0, id: Date.now() });
       localStorage.setItem("episteme_suggestions", JSON.stringify(suggestions));
       input.value = "";
       modal.style.display = "none";
       renderSuggestions();
     }
   
-    function upvote(index) {
+    // Upvote handler with one-vote-per-suggestion restriction
+    function upvote(id) {
+      const voted = JSON.parse(localStorage.getItem("episteme_voted") || "[]");
+      if (voted.includes(id)) return alert("You've already upvoted this!");
+  
       const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
-      suggestions[index].votes += 1;
-      localStorage.setItem("episteme_suggestions", JSON.stringify(suggestions));
+      const updated = suggestions.map(sug => {
+        if (sug.id === id) sug.votes += 1;
+        return sug;
+      });
+      localStorage.setItem("episteme_suggestions", JSON.stringify(updated));
+      voted.push(id);
+      localStorage.setItem("episteme_voted", JSON.stringify(voted));
       renderSuggestions();
     }
   
+    // Render suggestions, sorted by votes (descending)
     function renderSuggestions() {
-      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]")
+        .sort((a, b) => b.votes - a.votes);
       list.innerHTML = `<h2 style="grid-column: 1 / -1;">User Suggestions</h2>` +
-        suggestions.map((sug, i) => `
+        suggestions.map((sug) => `
           <div class="suggestion-item">
             <span>${sug.idea}</span>
-            <button onclick="upvote(${i})">▲ ${sug.votes}</button>
+            <button onclick="upvote(${sug.id})">▲ ${sug.votes}</button>
           </div>
         `).join("");
     }
   
     renderSuggestions();
+</script>
+<script>
+  const suggestionBtn = document.getElementById('suggestion-btn');
+  const suggestionModal = document.getElementById('suggestion-modal');
+  const suggestionInput = document.getElementById('suggestion-input');
+  const suggestionList = document.getElementById('suggestion-list');
+
+  let suggestions = JSON.parse(localStorage.getItem('epistemeSuggestions')) || [];
+
+  function renderSuggestions() {
+    suggestions.sort((a, b) => b.votes - a.votes); // Sort by votes
+    suggestionList.innerHTML = '';
+
+    suggestions.forEach((suggestion, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${suggestion.text} – <strong>${suggestion.votes} votes</strong>
+        <button onclick="upvoteSuggestion(${index})" ${suggestion.voted ? 'disabled' : ''}>Upvote</button>
+      `;
+      suggestionList.appendChild(li);
+    });
+  }
+
+  function upvoteSuggestion(index) {
+    const voted = JSON.parse(localStorage.getItem('epistemeVotes')) || {};
+    if (voted[index]) return;
+
+    suggestions[index].votes++;
+    voted[index] = true;
+    localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
+    localStorage.setItem('epistemeVotes', JSON.stringify(voted));
+    renderSuggestions();
+  }
+
+  function submitSuggestion() {
+    const text = suggestionInput.value.trim();
+    if (text === '') return;
+
+    suggestions.push({ text, votes: 0 });
+    localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
+    suggestionInput.value = '';
+    renderSuggestions();
+    closeModal();
+  }
+
+  function openModal() {
+    suggestionModal.style.display = 'block';
+  }
+
+  function closeModal() {
+    suggestionModal.style.display = 'none';
+  }
+
+  suggestionBtn.addEventListener('click', openModal);
+  window.onload = renderSuggestions;
 </script>
 </body>
 </html>
