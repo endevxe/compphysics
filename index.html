@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Episteme - Open Physics Simulations</title>
+  <title>Episteme</title>
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
   <style>
     :root {
@@ -353,8 +353,32 @@
     </div>
     
   </main>
-  <!-- Suggest a Simulation Button and Modal -->
-  <button id="suggestion-btn">Suggest a Simulation</button>
+    <!-- Floating Suggest Button -->
+  <button id="suggestion-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    💡 Suggest a Simulation
+  </button>
+  
+  <!-- Chat-style Modal -->
+  <div id="suggestion-modal" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    border-left: 1px solid #ccc;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    z-index: 999;
+    padding: 20px;
+    overflow-y: auto;
+  ">
+    <h3>Suggest a Simulation</h3>
+    <input id="suggestion-input" type="text" placeholder="Your idea..." style="width: 100%; padding: 8px;" />
+    <button id="submit-suggestion" style="margin-top: 10px;">Submit</button>
+    <hr />
+    <div id="suggestion-list"></div>
+  </div>
   
   <div id="suggestion-modal">
     <div class="modal-content">
@@ -469,5 +493,66 @@
       modal.style.display = "none";
       renderSuggestions();
     }
+
+  <script>
+    const modal = document.getElementById("suggestion-modal");
+    const btn = document.getElementById("suggestion-btn");
+    const submitBtn = document.getElementById("submit-suggestion");
+    const input = document.getElementById("suggestion-input");
+    const list = document.getElementById("suggestion-list");
+  
+    // Toggle modal
+    btn.onclick = () => {
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
+      input.focus();
+    };
+  
+    // Submit suggestion
+    submitBtn.onclick = function submitSuggestion() {
+      const idea = input.value.trim();
+      if (!idea) return;
+  
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      suggestions.push({ id: Date.now(), idea, votes: 0 });
+      localStorage.setItem("episteme_suggestions", JSON.stringify(suggestions));
+      input.value = "";
+      renderSuggestions();
+    };
+  
+    function renderSuggestions() {
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      suggestions.sort((a, b) => b.votes - a.votes);
+      const votedIds = JSON.parse(localStorage.getItem("episteme_voted_ids") || "[]");
+  
+      list.innerHTML = suggestions.map(s => `
+        <div style="margin-bottom: 10px;">
+          <span>${s.idea}</span><br>
+          <button style="margin-top: 4px;" ${votedIds.includes(s.id) ? "disabled" : ""} onclick="upvoteSuggestion(${s.id})">
+            ⬆️ ${s.votes}
+          </button>
+        </div>
+      `).join("");
+    }
+  
+    function upvoteSuggestion(id) {
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      const votedIds = JSON.parse(localStorage.getItem("episteme_voted_ids") || "[]");
+  
+      if (votedIds.includes(id)) return;
+  
+      const index = suggestions.findIndex(s => s.id === id);
+      if (index !== -1) {
+        suggestions[index].votes += 1;
+        votedIds.push(id);
+        localStorage.setItem("episteme_suggestions", JSON.stringify(suggestions));
+        localStorage.setItem("episteme_voted_ids", JSON.stringify(votedIds));
+        renderSuggestions();
+      }
+    }
+  
+    window.renderSuggestions = renderSuggestions;
+    window.upvoteSuggestion = upvoteSuggestion;
+    window.onload = renderSuggestions;
+  </script>
 </body>
 </html>
