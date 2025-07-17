@@ -157,6 +157,78 @@
       font-size: 0.9rem;
       color: #888;
     }
+
+    /* Suggest a Simulation styles */
+    #suggestion-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    #suggestion-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+    #suggestion-modal .modal-content {
+      background: #111;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      color: var(--fg);
+    }
+    #suggestion-modal input {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.5rem 0 1rem;
+      background: #222;
+      border: 1px solid #333;
+      color: var(--fg);
+      border-radius: 4px;
+    }
+    #suggestion-modal button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #suggestion-list {
+      margin-top: 2rem;
+    }
+    .suggestion-item {
+      background: #111;
+      border: 1px solid #333;
+      padding: 0.8rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .suggestion-item button {
+      background: transparent;
+      color: var(--accent);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
   </style>
 </head>
 <body>
@@ -267,7 +339,19 @@
     </div>
     
   </main>
-
+  <!-- Suggest a Simulation Button and Modal -->
+  <button id="suggestion-btn">Suggest a Simulation</button>
+  
+  <div id="suggestion-modal">
+    <div class="modal-content">
+      <h3>Suggest a Simulation</h3>
+      <input id="suggestion-input" type="text" placeholder="Your idea..." />
+      <button onclick="submitSuggestion()">Submit</button>
+    </div>
+  </div>
+  
+  <!-- Suggestions List -->
+  <div id="suggestion-list" class="container"></div>
   <footer>
     © 2025 Episteme | Last Update: July, 2025
   </footer>
@@ -349,5 +433,45 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
+  <script>
+    const modal = document.getElementById("suggestion-modal");
+    const btn = document.getElementById("suggestion-btn");
+    const input = document.getElementById("suggestion-input");
+    const list = document.getElementById("suggestion-list");
+  
+    btn.onclick = () => modal.style.display = "flex";
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+  
+    function submitSuggestion() {
+      const idea = input.value.trim();
+      if (!idea) return;
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      suggestions.push({ idea, votes: 0 });
+      localStorage.setItem("episteme_suggestions", JSON.stringify(suggestions));
+      input.value = "";
+      modal.style.display = "none";
+      renderSuggestions();
+    }
+  
+    function upvote(index) {
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      suggestions[index].votes += 1;
+      localStorage.setItem("episteme_suggestions", JSON.stringify(suggestions));
+      renderSuggestions();
+    }
+  
+    function renderSuggestions() {
+      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
+      list.innerHTML = `<h2 style="grid-column: 1 / -1;">User Suggestions</h2>` +
+        suggestions.map((sug, i) => `
+          <div class="suggestion-item">
+            <span>${sug.idea}</span>
+            <button onclick="upvote(${i})">▲ ${sug.votes}</button>
+          </div>
+        `).join("");
+    }
+  
+    renderSuggestions();
+</script>
 </body>
 </html>
