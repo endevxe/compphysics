@@ -473,38 +473,5 @@
       modal.style.display = "none";
       renderSuggestions();
     }
-  
-    // Upvote handler with one-vote-per-suggestion restriction
-    function upvote(id) {
-      const voted = JSON.parse(localStorage.getItem("episteme_voted") || "[]");
-      if (voted.includes(id)) return alert("You've already upvoted this!");
-  
-      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]");
-      const updated = suggestions.map(sug => {
-        if (sug.id === id) sug.votes += 1;
-        return sug;
-      });
-      localStorage.setItem("episteme_suggestions", JSON.stringify(updated));
-      voted.push(id);
-      localStorage.setItem("episteme_voted", JSON.stringify(voted));
-      renderSuggestions();
-    }
-  
-    // Render suggestions, sorted by votes (descending)
-    function renderSuggestions() {
-      const suggestions = JSON.parse(localStorage.getItem("episteme_suggestions") || "[]")
-        .sort((a, b) => b.votes - a.votes);
-      list.innerHTML = `<h2 style="grid-column: 1 / -1;">User Suggestions</h2>` +
-        suggestions.map((sug) => `
-          <div class="suggestion-item">
-            <span>${sug.idea}</span>
-            <button onclick="upvote(${sug.id})">▲ ${sug.votes}</button>
-          </div>
-        `).join("");
-    }
-  
-    renderSuggestions();
-</script>
-
 </body>
 </html>
