@@ -505,60 +505,6 @@
   
     renderSuggestions();
 </script>
-<script>
-  const suggestionBtn = document.getElementById('suggestion-btn');
-  const suggestionModal = document.getElementById('suggestion-modal');
-  const suggestionInput = document.getElementById('suggestion-input');
-  const suggestionList = document.getElementById('suggestion-list');
 
-  let suggestions = JSON.parse(localStorage.getItem('epistemeSuggestions')) || [];
-
-  function renderSuggestions() {
-    suggestions.sort((a, b) => b.votes - a.votes); // Sort by votes
-    suggestionList.innerHTML = '';
-
-    suggestions.forEach((suggestion, index) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        ${suggestion.text} – <strong>${suggestion.votes} votes</strong>
-        <button onclick="upvoteSuggestion(${index})" ${suggestion.voted ? 'disabled' : ''}>Upvote</button>
-      `;
-      suggestionList.appendChild(li);
-    });
-  }
-
-  function upvoteSuggestion(index) {
-    const voted = JSON.parse(localStorage.getItem('epistemeVotes')) || {};
-    if (voted[index]) return;
-
-    suggestions[index].votes++;
-    voted[index] = true;
-    localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
-    localStorage.setItem('epistemeVotes', JSON.stringify(voted));
-    renderSuggestions();
-  }
-
-  function submitSuggestion() {
-    const text = suggestionInput.value.trim();
-    if (text === '') return;
-
-    suggestions.push({ text, votes: 0 });
-    localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
-    suggestionInput.value = '';
-    renderSuggestions();
-    closeModal();
-  }
-
-  function openModal() {
-    suggestionModal.style.display = 'block';
-  }
-
-  function closeModal() {
-    suggestionModal.style.display = 'none';
-  }
-
-  suggestionBtn.addEventListener('click', openModal);
-  window.onload = renderSuggestions;
-</script>
 </body>
 </html>
