@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Episteme - Open Physics Simulations</title>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
   <style>
     :root {
       --bg: #000;
@@ -110,17 +111,14 @@
       font-size: 1.3rem;
       margin-bottom: 0.5rem;
     }
-
     .category-box p {
       font-size: 0.95rem;
       margin-bottom: 0.5rem;
     }
-
     .category-box ul {
       margin: 0.5rem 0 0 1rem;
       padding-left: 0;
     }
-
     .category-box li {
       font-size: 0.85rem;
       margin-bottom: 0.2rem;
@@ -144,7 +142,6 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.7);
-      display: flex;
       justify-content: center;
       align-items: center;
       z-index: 1000;
@@ -165,21 +162,40 @@
       border: none;
       border-radius: 4px;
     }
-
     #suggestion-list li {
       margin-bottom: 0.5rem;
     }
-
     footer {
       text-align: center;
       padding: 2rem 0;
       font-size: 0.9rem;
       color: #888;
     }
+
+    /* Aesthetic Search Bar */
+    #search {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: white;
+      margin-bottom: 1rem;
+      width: 250px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
   </style>
 </head>
 <body>
-
+  <!-- Page content will remain the same, as you've provided -->
   <header>
     <a href="#" class="brand" onclick="scrollToTop()">
       <img src="logo.png" alt="Episteme Logo">Episteme
@@ -305,37 +321,44 @@
     © 2025 Episteme | Last Update: July, 2025
   </footer>
 
+  <!-- Scripts moved to end of body -->
   <script>
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    const boxes = [...document.querySelectorAll('.category-box')];
+    const searchInput = document.getElementById('search');
+    const resultsCount = document.createElement('div');
+    resultsCount.style.color = '#888';
+    resultsCount.style.margin = '1rem auto';
+    resultsCount.style.textAlign = 'center';
+    searchInput.parentNode.appendChild(resultsCount);
+
+    const fuse = new Fuse(boxes.map((box, i) => ({
+      index: i,
+      text: box.textContent.trim()
+    })), { keys: ['text'], threshold: 0.4 });
 
     function filterCategories() {
-      const input = document.getElementById('search');
-      const query = input.value.toLowerCase().trim();
-      const boxes = document.querySelectorAll('.category-box');
+      const query = searchInput.value.trim();
+      const results = query ? fuse.search(query) : boxes.map((_, i) => ({ item: { index: i } }));
 
-      boxes.forEach(box => {
-        const text = box.innerText.toLowerCase();
-        if (query && text.includes(query)) {
-          box.style.display = 'block';
-          box.classList.add('highlight');
-        } else if (query) {
-          box.style.display = 'none';
-          box.classList.remove('highlight');
-        } else {
-          box.style.display = 'block';
-          box.classList.remove('highlight');
+      boxes.forEach((box, i) => {
+        const found = results.some(r => r.item.index === i);
+        box.style.display = found ? 'block' : 'none';
+        box.classList.toggle('highlight', found && query);
+        if (query && found) {
+          const reg = new RegExp(`(${query})`, 'ig');
+          box.innerHTML = box.innerHTML.replace(reg, '<mark>$1</mark>');
         }
       });
+
+      resultsCount.textContent = `${results.length} simulation${results.length !== 1 ? 's' : ''} found`;
     }
 
     function clearSearch() {
-      document.getElementById('search').value = '';
+      searchInput.value = '';
       filterCategories();
     }
 
-    // Suggestion modal and voting
+    // Suggestion modal logic
     const suggestionBtn = document.getElementById('suggestion-btn');
     const suggestionModal = document.getElementById('suggestion-modal');
     const suggestionInput = document.getElementById('suggestion-input');
@@ -370,7 +393,7 @@
 
     function submitSuggestion() {
       const text = suggestionInput.value.trim();
-      if (text === '') return;
+      if (!text) return;
 
       suggestions.push({ text, votes: 0 });
       localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
@@ -390,6 +413,5 @@
     suggestionBtn.addEventListener('click', openModal);
     window.onload = renderSuggestions;
   </script>
-
 </body>
 </html>
