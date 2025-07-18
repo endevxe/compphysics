@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Episteme - Open Physics Simulations</title>
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
   <style>
@@ -20,7 +20,6 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.6;
     }
-
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -33,21 +32,9 @@
       padding: 0.75rem 1.25rem;
     }
     header .brand {
-      display: flex;
-      align-items: center;
-      color: var(--link);
-      text-decoration: none;
       font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: 0.05em;
-    }
-    header .brand img {
-      height: 32px;
-      margin-right: 0.5rem;
-      vertical-align: middle;
-    }
-    header .brand:hover {
-      color: var(--accent);
     }
     nav a {
       margin-left: 1rem;
@@ -80,6 +67,35 @@
       color: #bbb;
     }
 
+    .search-bar {
+      text-align:center; 
+      margin-top:4rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .search-bar input {
+      padding:0.6rem 1rem;
+      width:80%;
+      max-width:400px;
+      border-radius:6px;
+      border:1px solid #333;
+      background:#111;
+      color:#f5f5f5;
+    }
+    .search-bar button {
+      padding: 0.6rem 1rem;
+      background: #222;
+      border: 1px solid #333;
+      color: #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .search-bar button:hover {
+      background: #333;
+      color: white;
+    }
+
     .container {
       max-width: 1000px;
       margin: 0 auto;
@@ -96,14 +112,12 @@
       padding: 1.5rem;
       transition: transform 0.3s ease, background 0.3s ease;
       cursor: pointer;
+      outline: none;
     }
-    .category-box:hover {
+    .category-box:hover, .category-box.highlighted {
       transform: scale(1.03);
       background: #1a1a1a;
-    }
-    .category-box.highlight {
-      border-color: var(--accent);
-      background: #222;
+      box-shadow: 0 0 0 2px var(--accent);
     }
     .category-box h3 {
       margin-top: 0;
@@ -125,81 +139,17 @@
       list-style: disc;
     }
 
-    #suggestion-btn {
-      margin: 2rem auto;
-      display: block;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #suggestion-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: #111;
-      padding: 1.5rem;
-      border-radius: 10px;
-      max-width: 400px;
-      width: 100%;
-    }
-    .modal-content input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: #222;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-    #suggestion-list li {
-      margin-bottom: 0.5rem;
-    }
     footer {
       text-align: center;
       padding: 2rem 0;
       font-size: 0.9rem;
       color: #888;
     }
-
-    /* Aesthetic Search Bar */
-    #search {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: none;
-      background: #222;
-      color: white;
-      margin-bottom: 1rem;
-      width: 250px;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      background: var(--accent);
-      color: white;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
   </style>
 </head>
 <body>
-  <!-- Page content will remain the same, as you've provided -->
   <header>
-    <a href="#" class="brand" onclick="scrollToTop()">
-      <img src="logo.png" alt="Episteme Logo">Episteme
-    </a>
+    <div class="brand">Episteme</div>
     <nav>
       <a href="#simulations">Simulations</a>
       <a href="about.html">About</a>
@@ -213,15 +163,12 @@
     <h2>Theoretical Models • Open Source • Documentation</h2>
   </section>
 
-  <div style="text-align:center; margin-top:4rem;">
-    <input id="search" type="text" placeholder="Search simulations…" oninput="filterCategories()" />
-    <button onclick="clearSearch()">Clear</button>
+  <div class="search-bar">
+    <input id="search" type="text" placeholder="Search simulations…" />
+    <button onclick="resetSearch()">✖</button>
   </div>
 
   <main id="simulations" class="container">
-    <!-- all your category-boxes (unchanged) here -->
-    <!-- Paste all the simulation category boxes you shared earlier -->
-    <!-- Example below (keep yours as-is): -->
     <div class="category-box" onclick="location.href='classical-mechanics/index.html'">
       <h3>Classical Mechanics</h3>
       <p>Newtonian systems and motion modeling.</p>
@@ -231,7 +178,7 @@
         <li><a href="classical-mechanics/projectile/">Projectile Motion</a></li>
       </ul>
     </div>
-    <!-- (add others below as before) -->
+
     <div class="category-box" onclick="location.href='quantum-physics/index.html'">
       <h3>Quantum Mechanics</h3>
       <p>Simulations of quantum systems and wavefunctions.</p>
@@ -295,7 +242,7 @@
         <li><a href="data-analysis/monte-carlo-error/">Monte Carlo Errors</a></li>
       </ul>
     </div>
-
+    
     <div class="category-box" onclick="location.href='numerical-methods/index.html'">
       <h3>Numerical Methods</h3>
       <p>Solvers and numerical algorithms.</p>
@@ -303,115 +250,83 @@
         <li><a href="numerical-methods/runge-kutta/">Runge-Kutta</a></li>
       </ul>
     </div>
+    
   </main>
-
-  <button id="suggestion-btn">Suggest a Simulation</button>
-
-  <div id="suggestion-modal">
-    <div class="modal-content">
-      <h3>Suggest a Simulation</h3>
-      <input id="suggestion-input" type="text" placeholder="Your idea..." />
-      <button onclick="submitSuggestion()">Submit</button>
-      <button onclick="closeModal()">Cancel</button>
-      <ul id="suggestion-list"></ul>
-    </div>
-  </div>
 
   <footer>
     © 2025 Episteme | Last Update: July, 2025
   </footer>
 
-  <!-- Scripts moved to end of body -->
   <script>
-    const boxes = [...document.querySelectorAll('.category-box')];
-    const searchInput = document.getElementById('search');
-    const resultsCount = document.createElement('div');
-    resultsCount.style.color = '#888';
-    resultsCount.style.margin = '1rem auto';
-    resultsCount.style.textAlign = 'center';
-    searchInput.parentNode.appendChild(resultsCount);
+    const searchInput = document.getElementById("search");
+    const boxes = [...document.querySelectorAll(".category-box")];
+    const container = document.getElementById("simulations");
+    let currentIndex = -1;
 
-    const fuse = new Fuse(boxes.map((box, i) => ({
-      index: i,
-      text: box.textContent.trim()
-    })), { keys: ['text'], threshold: 0.4 });
+    const fuse = new Fuse(boxes.map(box => ({
+      el: box,
+      title: box.querySelector("h3")?.textContent || '',
+      desc: box.querySelector("p")?.textContent || '',
+      links: [...box.querySelectorAll("li")].map(li => li.textContent).join(" ")
+    })), {
+      keys: ["title", "desc", "links"],
+      threshold: 0.4
+    });
 
     function filterCategories() {
       const query = searchInput.value.trim();
-      const results = query ? fuse.search(query) : boxes.map((_, i) => ({ item: { index: i } }));
+      currentIndex = -1;
+      boxes.forEach(b => b.style.display = "none");
 
-      boxes.forEach((box, i) => {
-        const found = results.some(r => r.item.index === i);
-        box.style.display = found ? 'block' : 'none';
-        box.classList.toggle('highlight', found && query);
-        if (query && found) {
-          const reg = new RegExp(`(${query})`, 'ig');
-          box.innerHTML = box.innerHTML.replace(reg, '<mark>$1</mark>');
-        }
-      });
+      if (!query) {
+        boxes.forEach(b => b.style.display = "");
+        return;
+      }
 
-      resultsCount.textContent = `${results.length} simulation${results.length !== 1 ? 's' : ''} found`;
+      const results = fuse.search(query);
+      results.forEach(r => r.item.el.style.display = "");
+
+      boxes.forEach(b => b.classList.remove("highlighted"));
+      if (results[0]) {
+        results[0].item.el.classList.add("highlighted");
+        currentIndex = 0;
+      }
     }
 
-    function clearSearch() {
-      searchInput.value = '';
+    function resetSearch() {
+      searchInput.value = "";
+      boxes.forEach(b => b.classList.remove("highlighted"));
       filterCategories();
     }
 
-    // Suggestion modal logic
-    const suggestionBtn = document.getElementById('suggestion-btn');
-    const suggestionModal = document.getElementById('suggestion-modal');
-    const suggestionInput = document.getElementById('suggestion-input');
-    const suggestionList = document.getElementById('suggestion-list');
+    function navigate(direction) {
+      const visible = boxes.filter(b => b.style.display !== "none");
+      if (visible.length === 0) return;
 
-    let suggestions = JSON.parse(localStorage.getItem('epistemeSuggestions')) || [];
+      if (currentIndex >= 0) visible[currentIndex].classList.remove("highlighted");
 
-    function renderSuggestions() {
-      suggestions.sort((a, b) => b.votes - a.votes);
-      suggestionList.innerHTML = '';
+      if (direction === "down") currentIndex = (currentIndex + 1) % visible.length;
+      else if (direction === "up") currentIndex = (currentIndex - 1 + visible.length) % visible.length;
 
-      suggestions.forEach((suggestion, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          ${suggestion.text} – <strong>${suggestion.votes} votes</strong>
-          <button onclick="upvoteSuggestion(${index})" ${suggestion.voted ? 'disabled' : ''}>Upvote</button>
-        `;
-        suggestionList.appendChild(li);
-      });
+      visible[currentIndex].classList.add("highlighted");
+      visible[currentIndex].scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
-    function upvoteSuggestion(index) {
-      const voted = JSON.parse(localStorage.getItem('epistemeVotes')) || {};
-      if (voted[index]) return;
-
-      suggestions[index].votes++;
-      voted[index] = true;
-      localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
-      localStorage.setItem('epistemeVotes', JSON.stringify(voted));
-      renderSuggestions();
+    function openSelected() {
+      const visible = boxes.filter(b => b.style.display !== "none");
+      if (currentIndex >= 0 && visible[currentIndex]) {
+        visible[currentIndex].click();
+      }
     }
 
-    function submitSuggestion() {
-      const text = suggestionInput.value.trim();
-      if (!text) return;
+    searchInput.addEventListener("input", filterCategories);
+    searchInput.addEventListener("keydown", e => {
+      if (e.key === "ArrowDown") { e.preventDefault(); navigate("down"); }
+      if (e.key === "ArrowUp") { e.preventDefault(); navigate("up"); }
+      if (e.key === "Enter") openSelected();
+    });
 
-      suggestions.push({ text, votes: 0 });
-      localStorage.setItem('epistemeSuggestions', JSON.stringify(suggestions));
-      suggestionInput.value = '';
-      renderSuggestions();
-      closeModal();
-    }
-
-    function openModal() {
-      suggestionModal.style.display = 'flex';
-    }
-
-    function closeModal() {
-      suggestionModal.style.display = 'none';
-    }
-
-    suggestionBtn.addEventListener('click', openModal);
-    window.onload = renderSuggestions;
+    window.addEventListener("load", resetSearch);
   </script>
 </body>
 </html>
