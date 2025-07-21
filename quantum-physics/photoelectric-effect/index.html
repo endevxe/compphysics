@@ -3,44 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Photoelectric Effect Simulation</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Photoelectric Effect Simulator</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 1rem;
-      line-height: 1.6;
-      background: #fdfdfd;
-      color: #222;
+      padding: 2rem;
+      background-color: #f4f4f4;
     }
-    h1, h2, h3 {
-      color: #2c3e50;
+    h1 {
+      text-align: center;
     }
-    .sim-controls, .output, canvas {
-      margin-top: 2rem;
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1rem 0;
     }
-    label {
-      display: block;
-      margin: 1rem 0 0.2rem;
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    .electrons-container {
-      margin-top: 2rem;
-      width: 100%;
-      height: 150px;
-      background: #222;
-      position: relative;
-      overflow: hidden;
+    canvas {
+      border: 1px solid #ccc;
+      background-color: #fff;
     }
-    .electron {
-      width: 5px;
-      height: 5px;
-      background: #00f0ff;
-      position: absolute;
-      border-radius: 50%;
-    }
-    .download {
+    .output {
       margin-top: 2rem;
     }
   </style>
@@ -48,137 +40,116 @@
 <body>
   <h1>Photoelectric Effect Simulator</h1>
 
-  <section>
-    <h2>The Physics Behind It</h2>
-    <p>
-      The <strong>photoelectric effect</strong> refers to the emission of electrons from a material when light shines on it.
-      Albert Einstein explained this using quantum theory: photons must have a minimum energy to eject electrons.
-    </p>
-    <p>
-      The core equation is:
-      \[ K.E = hf - \phi \]
-      Where:
-      <ul>
-        <li><strong>K.E</strong> is the kinetic energy of the emitted electron</li>
-        <li><strong>h</strong> is Planck's constant \( 6.626 \times 10^{-34} \text{ J·s} \)</li>
-        <li><strong>f</strong> is the frequency of incoming light</li>
-        <li><strong>\( \phi \)</strong> is the work function of the material (minimum energy required to release an electron)</li>
-      </ul>
-      If \( hf < \phi \), then no electrons are emitted regardless of intensity.
-    </p>
-    <p>Intensity controls the <em>number</em> of emitted electrons, not their energy.</p>
-  </section>
+  <p>Simulate how light of different frequencies and intensities causes electrons to be emitted from different metals.</p>
 
-  <div class="sim-controls">
-    <label for="frequency">Frequency (×10<sup>14</sup> Hz):</label>
-    <input type="range" id="frequency" min="3" max="9" step="0.1" value="5">
-    <span id="freqDisplay">5</span>
+  <div class="controls">
+    <div class="slider-container">
+      <label for="frequency">Frequency (×10¹⁴ Hz):</label>
+      <input type="range" id="frequency" min="3" max="10" value="5" step="0.1">
+      <span id="freqVal">5</span>
+    </div>
 
-    <label for="intensity">Intensity (arbitrary units):</label>
-    <input type="range" id="intensity" min="0" max="1" step="0.01" value="0.5">
-    <span id="intensityDisplay">0.5</span>
+    <div class="slider-container">
+      <label for="intensity">Intensity (arbitrary units):</label>
+      <input type="range" id="intensity" min="1" max="10" value="5">
+      <span id="intVal">5</span>
+    </div>
 
-    <label for="metal">Select Metal:</label>
-    <select id="metal">
-      <option value="2.14">Cesium (2.14 eV)</option>
-      <option value="2.3">Potassium (2.3 eV)</option>
-      <option value="2.36" selected>Sodium (2.36 eV)</option>
-      <option value="4.3">Zinc (4.3 eV)</option>
-      <option value="4.7">Copper (4.7 eV)</option>
-    </select>
+    <div class="slider-container">
+      <label for="metal">Metal:</label>
+      <select id="metal">
+        <option value="2.3">Sodium (\( \phi = 2.3 \text{ eV} \))</option>
+        <option value="2.14">Potassium (\( \phi = 2.14 \text{ eV} \))</option>
+        <option value="4.3">Zinc (\( \phi = 4.3 \text{ eV} \))</option>
+        <option value="4.9">Copper (\( \phi = 4.9 \text{ eV} \))</option>
+      </select>
+    </div>
   </div>
+
+  <canvas id="canvas" width="600" height="200"></canvas>
+  <div id="plot" style="width: 100%; height: 400px;"></div>
 
   <div class="output">
-    <canvas id="graph" width="600" height="300"></canvas>
-    <div class="electrons-container" id="electrons"></div>
+    <h2>Explanation</h2>
+    <p>According to the photoelectric equation:</p>
+    <p>\[ K.E. = hf - \phi \]</p>
+    <p>
+      Where:
+      \( h = 6.63 \times 10^{-34} \text{ J·s} \) is Planck's constant,<br>
+      \( f \) is frequency in Hz,<br>
+      \( \phi \) is the work function of the metal in eV,
+      and \( K.E. \) is the maximum kinetic energy of ejected electrons.
+    </p>
+    <p>
+      If \( hf < \phi \), no electrons are emitted. Otherwise, more intensity = more electrons (brighter beam),
+      higher frequency = more kinetic energy per electron.
+    </p>
   </div>
 
-  <div class="download">
-    <a href="photoelectric_simulation.py" download>
-      <button>Download Python Source Code</button>
-    </a>
-  </div>
+  <p><a href="photoelectric_simulation.py" download>Download Python Version</a></p>
 
   <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     const freqSlider = document.getElementById("frequency");
-    const intensitySlider = document.getElementById("intensity");
-    const freqDisplay = document.getElementById("freqDisplay");
-    const intensityDisplay = document.getElementById("intensityDisplay");
-    const metalSelect = document.getElementById("metal");
-    const electronsDiv = document.getElementById("electrons");
+    const intSlider = document.getElementById("intensity");
+    const metalDropdown = document.getElementById("metal");
+    const freqVal = document.getElementById("freqVal");
+    const intVal = document.getElementById("intVal");
 
-    const h = 6.626e-34;
-    const e = 1.602e-19;
+    const h = 4.1357e-15; // Planck’s constant in eV·s
 
-    let chart = new Chart(document.getElementById("graph").getContext("2d"), {
-      type: "line",
-      data: {
-        labels: [],
-        datasets: [{
-          label: "Kinetic Energy (eV)",
-          data: [],
-          borderColor: "#0074D9",
-          borderWidth: 2,
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Kinetic Energy (eV)'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Frequency (×10¹⁴ Hz)'
-            }
-          }
-        }
-      }
-    });
-
-    function simulate() {
-      const f = parseFloat(freqSlider.value) * 1e14;
-      const intensity = parseFloat(intensitySlider.value);
-      const phi = parseFloat(metalSelect.value) * e;
-
-      freqDisplay.textContent = freqSlider.value;
-      intensityDisplay.textContent = intensity;
-
-      const hf = h * f;
-      const KE = hf - phi;
-      const electrons = KE > 0 ? Math.floor(intensity * 50) : 0;
-      const KE_eV = KE > 0 ? KE / e : 0;
-
-      // Update Graph
-      const freqLabel = freqSlider.value;
-      chart.data.labels.push(freqLabel);
-      chart.data.datasets[0].data.push(KE_eV);
-      chart.update();
-
-      // Emit electrons
-      electronsDiv.innerHTML = "";
-      for (let i = 0; i < electrons; i++) {
-        const e = document.createElement("div");
-        e.className = "electron";
-        e.style.left = Math.random() * 100 + "%";
-        e.style.bottom = "0";
-        e.style.animation = `move ${0.5 + Math.random()}s linear forwards`;
-        electronsDiv.appendChild(e);
+    function drawElectrons(ke, intensity) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (ke <= 0) return;
+      for (let i = 0; i < intensity * 5; i++) {
+        const x = Math.random() * canvas.width;
+        const y = canvas.height - Math.random() * (ke * 100);
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = "blue";
+        ctx.fill();
       }
     }
 
-    // Trigger on input
-    freqSlider.oninput = simulate;
-    intensitySlider.oninput = simulate;
-    metalSelect.onchange = simulate;
+    function update() {
+      const f = parseFloat(freqSlider.value) * 1e14;
+      const I = parseInt(intSlider.value);
+      const phi = parseFloat(metalDropdown.value);
+      const hf = h * f;
+      const ke = hf > phi ? hf - phi : 0;
 
-    simulate();
+      freqVal.textContent = freqSlider.value;
+      intVal.textContent = intSlider.value;
+
+      drawElectrons(ke, I);
+
+      Plotly.newPlot("plot", [{
+        x: [0, freqSlider.value * 1e14],
+        y: [0, ke],
+        type: "scatter",
+        mode: "lines+markers",
+        line: { color: "green" },
+        name: "Kinetic Energy"
+      }, {
+        x: [0, freqSlider.value * 1e14],
+        y: [phi, phi],
+        mode: "lines",
+        line: { dash: 'dot', color: 'red' },
+        name: "Work Function (\u03d5)"
+      }], {
+        title: "Frequency vs Kinetic Energy",
+        xaxis: { title: "Frequency (Hz)" },
+        yaxis: { title: "Kinetic Energy (eV)" },
+        margin: { t: 50 }
+      });
+    }
+
+    freqSlider.oninput = update;
+    intSlider.oninput = update;
+    metalDropdown.onchange = update;
+
+    update();
   </script>
 </body>
 </html>
