@@ -108,54 +108,60 @@
 </p>
 
 <h2>4 &middot; Interactive Simulation</h2>
-<canvas id="canvas" width="600" height="400"></canvas>
+<canvas id="sim" width="800" height="400" style="background:black; display:block; margin:auto; border:1px solid purple"></canvas>
+<div style="text-align:center; color:white; font-family:sans-serif;">
+  <label>Angle (°): <input id="angle" type="range" min="10" max="80" value="45" oninput="reset()"></label>
+  <label>Speed (m/s): <input id="speed" type="range" min="10" max="100" value="50" oninput="reset()"></label>
+  <label>Drag Coefficient k: <input id="drag" type="range" min="0" max="0.2" step="0.01" value="0.05" oninput="reset()"></label>
+</div>
+
 <script>
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("sim");
 const ctx = canvas.getContext("2d");
-ctx.fillStyle = "#1e1a2b";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+let angleDeg = 45, speed = 50, k = 0.05;
+let dt = 0.02, g = 9.8;
+let x = 0, y = 0, vx = 0, vy = 0;
+let path = [];
 
-const g = 9.81, m = 1.0, k = 0.05;
-const dt = 0.02;
-const theta = Math.PI / 4;
-const v0 = 40;
-let x = 0, y = 0, vx = v0 * Math.cos(theta), vy = v0 * Math.sin(theta);
-let trail = [];
+function reset() {
+  angleDeg = parseFloat(document.getElementById("angle").value);
+  speed = parseFloat(document.getElementById("speed").value);
+  k = parseFloat(document.getElementById("drag").value);
 
-function step() {
+  const angle = angleDeg * Math.PI / 180;
+  x = 0;
+  y = canvas.height - 10; // Launch from bottom
+  vx = speed * Math.cos(angle);
+  vy = -speed * Math.sin(angle); // negative since y=0 is top
+  path = [];
+  requestAnimationFrame(simulate);
+}
+
+function simulate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "violet";
+  ctx.beginPath();
+  for (let p of path) {
+    ctx.lineTo(p[0], p[1]);
+  }
+  ctx.stroke();
+
   let v = Math.sqrt(vx * vx + vy * vy);
-  let ax = -k * v * vx / m;
-  let ay = -g - k * v * vy / m;
+  let ax = -k * v * vx;
+  let ay = g - k * v * vy;
 
   vx += ax * dt;
   vy += ay * dt;
-  x += vx * dt;
-  y += vy * dt;
-  trail.push([x, y]);
-}
+  x += vx * dt * 10; // scale for canvas
+  y += vy * dt * 10;
 
-function draw() {
-  ctx.fillStyle = "#1e1a2b";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-  for (let i = 0; i < trail.length; i++) {
-    let px = trail[i][0] * 5;
-    let py = canvas.height - trail[i][1] * 5;
-    ctx.lineTo(px, py);
-  }
-  ctx.strokeStyle = "#c299ff";
-  ctx.stroke();
-}
-
-function animate() {
-  if (y >= 0) {
-    step();
-    draw();
-    requestAnimationFrame(animate);
+  if (y < canvas.height) {
+    path.push([x, y]);
+    requestAnimationFrame(simulate);
   }
 }
 
-animate();
+reset();
 </script>
 
 <h2>5 &middot; Python Source Code Explanation</h2>
@@ -174,6 +180,11 @@ animate();
 </ul>
 <p>
   The result visually confirms that drag shortens range and flattens the arc.
+</p>
+
+<h2>4&nbsp;&middot;&nbsp;Source Code</h2>
+<p>
+  <a href="projectile_drag.py" target="_blank">projectile_drag.py</a>
 </p>
 
 <h2>6 &middot; Back to Homepage</h2>
