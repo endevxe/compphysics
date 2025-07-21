@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Double Pendulum</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Double Pendulum Simulation</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script type="text/javascript" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
-    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+    body {
+      font-family: sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      line-height: 1.6;
+      padding: 0 1rem;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    canvas {
+      display: block;
+      margin: 2rem auto;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
   </style>
 </head>
 <body>
@@ -16,50 +35,140 @@
 <h1>Double Pendulum Simulation</h1>
 
 <p>
-  The double pendulum consists of two pendulums attached end to end.
-  It is a classic example of a simple system that exhibits chaotic behavior —
-  small differences in starting conditions lead to vastly different outcomes.
+  The <strong>double pendulum</strong> is a classic example of a chaotic system. It consists of two simple pendulums attached end-to-end. Despite its seemingly straightforward design, the motion it exhibits is highly sensitive to initial conditions and defies easy prediction. This makes the double pendulum a perfect demonstration of deterministic chaos in classical mechanics.
 </p>
 
-<h2>1&nbsp;&middot;&nbsp;Equations of Motion</h2>
-<p>
-  The system has two angular coordinates: \( \theta_1 \) and \( \theta_2 \).
-  Using Lagrangian mechanics, we derive a set of coupled second-order differential equations.
-  These are nonlinear and contain terms like \( \sin(\theta_1 - \theta_2) \),
-  making the system highly sensitive to initial conditions.
-</p>
+<h2>1 · Physics of the Double Pendulum</h2>
 
 <p>
-  The equations are reduced to four first-order ODEs for \( \theta_1, \omega_1, \theta_2, \omega_2 \),
-  where \( \omega_i = \frac{d\theta_i}{dt} \), and solved numerically using the 4th-order Runge–Kutta method (RK4).
+  Consider two point masses, \( m_1 \) and \( m_2 \), suspended on massless rods of length \( L_1 \) and \( L_2 \), respectively. The upper pendulum swings from a fixed pivot, and the second pendulum swings from the end of the first.
 </p>
 
-<h2>2&nbsp;&middot;&nbsp;Numerical Method</h2>
+<h3>1.1 · Generalized Coordinates</h3>
 <p>
-  The RK4 method is used to evolve the system in time. It evaluates four intermediate slopes per time step
-  and combines them to produce an accurate next value. This is crucial for chaotic systems where precision matters.
+  We describe the motion using angular displacements \( \theta_1 \) and \( \theta_2 \). The kinetic and potential energy are derived as follows:
+</p>
+<p>
+  Kinetic energy:
+  \[ T = \frac{1}{2} m_1 (L_1 \dot{\theta}_1)^2 + \frac{1}{2} m_2 \left[ (L_1 \dot{\theta}_1)^2 + (L_2 \dot{\theta}_2)^2 + 2L_1L_2\dot{\theta}_1\dot{\theta}_2 \cos(\theta_1 - \theta_2) \right] \]
+  Potential energy:
+  \[ V = -m_1 g L_1 \cos(\theta_1) - m_2 g [L_1 \cos(\theta_1) + L_2 \cos(\theta_2)] \]
 </p>
 
-<h2>3&nbsp;&middot;&nbsp;No Real-World Data Needed</h2>
+<h3>1.2 · Lagrangian and Equations of Motion</h3>
 <p>
-  The system is modeled in dimensionless units: \( m = L = g = 1 \).
-  This lets us understand the ideal behavior of the system without using physical data.
-  It's useful for visualizing how energy and chaos emerge in theoretical setups.
+  The Lagrangian \( \mathcal{L} = T - V \) leads to two coupled second-order nonlinear differential equations. These are lengthy, but can be reduced to four first-order ODEs:
+</p>
+<p>
+  Define \( \omega_1 = \dot{\theta}_1 \) and \( \omega_2 = \dot{\theta}_2 \). Then:
+</p>
+<p>
+\[
+\begin{aligned}
+\frac{d\theta_1}{dt} &= \omega_1 \\
+\frac{d\omega_1}{dt} &= f_1(\theta_1, \theta_2, \omega_1, \omega_2) \\
+\frac{d\theta_2}{dt} &= \omega_2 \\
+\frac{d\omega_2}{dt} &= f_2(\theta_1, \theta_2, \omega_1, \omega_2)
+\end{aligned}
+\]
 </p>
 
-<h2>4&nbsp;&middot;&nbsp;What You’ll See</h2>
+<h2>2 · Numerical Integration with RK4</h2>
 <p>
-  The animation shows the two pendulum bobs moving. You will notice that their motion is smooth at first,
-  but soon becomes unpredictable due to chaotic dynamics. A red trail follows the second pendulum bob to show its path.
+  Due to the nonlinearity, we can't solve the equations analytically. Instead, we use the Runge–Kutta 4th order method (RK4) to evolve the system in time. This method calculates intermediate slopes and combines them to give an accurate next state.
 </p>
 
-<h2>5&nbsp;&middot;&nbsp;Code</h2>
+<h2>3 · Live In-Browser Simulation</h2>
 <p>
-  <a href="double_pendulum.py" target="_blank">double_pendulum.py</a>
+  Below is a live simulation of the double pendulum using JavaScript and the HTML5 Canvas.
+</p>
+<canvas id="canvas" width="600" height="400"></canvas>
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let theta1 = Math.PI / 2, theta2 = Math.PI / 2;
+let omega1 = 0, omega2 = 0;
+const g = 1, L1 = 1, L2 = 1, m1 = 1, m2 = 1;
+const dt = 0.05;
+
+function update() {
+  let delta = theta2 - theta1;
+  let den1 = (m1 + m2) * L1 - m2 * L1 * Math.cos(delta) * Math.cos(delta);
+  let den2 = (L2 / L1) * den1;
+
+  let a1 = (m2 * L1 * omega1 * omega1 * Math.sin(delta) * Math.cos(delta) +
+           m2 * g * Math.sin(theta2) * Math.cos(delta) +
+           m2 * L2 * omega2 * omega2 * Math.sin(delta) -
+           (m1 + m2) * g * Math.sin(theta1)) / den1;
+
+  let a2 = (-m2 * L2 * omega2 * omega2 * Math.sin(delta) * Math.cos(delta) +
+           (m1 + m2) * g * Math.sin(theta1) * Math.cos(delta) -
+           (m1 + m2) * L1 * omega1 * omega1 * Math.sin(delta) -
+           (m1 + m2) * g * Math.sin(theta2)) / den2;
+
+  omega1 += a1 * dt;
+  omega2 += a2 * dt;
+  theta1 += omega1 * dt;
+  theta2 += omega2 * dt;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  let x0 = canvas.width / 2;
+  let y0 = 100;
+  let x1 = x0 + L1 * 100 * Math.sin(theta1);
+  let y1 = y0 + L1 * 100 * Math.cos(theta1);
+  let x2 = x1 + L2 * 100 * Math.sin(theta2);
+  let y2 = y1 + L2 * 100 * Math.cos(theta2);
+
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x1, y1, 8, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x2, y2, 8, 0, 2 * Math.PI);
+  ctx.fill();
+}
+
+function animate() {
+  update();
+  draw();
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+<h2>4 · Python Code Breakdown</h2>
+<p>
+  The <code>double_pendulum.py</code> file uses <code>matplotlib</code> and <code>scipy.integrate</code> to simulate and animate the double pendulum system. Here's how it works step by step:
+</p>
+<ol>
+  <li><strong>Define parameters:</strong> Masses, lengths, gravity, and initial angles are initialized.</li>
+  <li><strong>Equations of motion:</strong> Written as a system of ODEs using Newton’s laws or Lagrangian derivation.</li>
+  <li><strong>Numerical Integration:</strong> The ODE system is solved using <code>odeint()</code> from SciPy.</li>
+  <li><strong>Animation:</strong> <code>matplotlib.animation.FuncAnimation</code> is used to create a live plot of the pendulum's movement over time.</li>
+</ol>
+
+<h2>5 · Conclusion</h2>
+<p>
+  The double pendulum illustrates the beauty and unpredictability of classical mechanics. With a simple structure, it creates wildly unpredictable behavior. By simulating it numerically and visually, we grasp not only how deterministic systems can behave chaotically, but also the power of numerical methods in physics.
+</p>
+
+<h2>6 · Python Code Download</h2>
+<p>
+  <a href="double_pendulum.py" target="_blank">Click here to download double_pendulum.py</a>
 </p>
 
 <h2>Back to Homepage</h2>
-<p><a href="../../index.html">← Return to main page</a></p>
+<p>
+  <a href="../../index.html">← Return to main page</a>
+</p>
 
 </body>
 </html>
