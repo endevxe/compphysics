@@ -1,93 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mass–Spring–Damper System</title>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script type="text/javascript" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mass-Spring-Damper Simulation</title>
   <style>
-    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
-    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+    body {
+      font-family: system-ui, sans-serif;
+      background: #000;
+      color: #f5f5f5;
+      max-width: 900px;
+      margin: 2rem auto;
+      line-height: 1.6;
+    }
+    code {
+      background: #111;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    h1, h2 {
+      color: #6a0dad;
+    }
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #c299ff;
+    }
+    canvas {
+      width: 100%;
+      height: 400px;
+      background: #111;
+      border: 1px solid #6a0dad;
+      margin: 1rem 0;
+    }
+    input[type="range"], select {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    .plot-container {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+    .plot-container canvas {
+      flex: 1;
+    }
   </style>
 </head>
 <body>
+  <h1>Mass-Spring-Damper Oscillator</h1>
 
-<h1>Mass–Spring–Damper Oscillator</h1>
+  <p>This simulation compares the behavior of a mass-spring-damper system using an analytic solution and a numerical Runge-Kutta 4 (RK4) method.</p>
 
-<p>
-  Many mechanical and control‑system problems reduce to a single degree of
-  freedom mass \( m \) attached to a spring of stiffness \( k \) and a damper
-  with coefficient \( c \).
-  The governing differential equation is
-  \[
-      m\ddot{x}+c\dot{x}+k x = 0,
-  \]
-  where \( x(t) \) is the displacement from equilibrium.
-  The term \( kx \) pulls the mass back to equilibrium, while \( c\dot{x} \)
-  removes energy and models friction or fluid damping.
-</p>
+  <h2>Mathematical Model</h2>
+  <p>The system is modeled by a second-order differential equation:</p>
+  <pre><code>m * d²x/dt² + c * dx/dt + k * x = 0</code></pre>
 
-<h2>1&nbsp;&middot;&nbsp;Damping Ratio and Natural Frequency</h2>
+  <p>We normalize the equation by dividing through by mass <code>m</code>:</p>
+  <pre><code>d²x/dt² + 2ζωₙ dx/dt + ωₙ²x = 0</code></pre>
 
-<p>
-  Dividing by the mass puts the equation in standard form
-  \[
-      \ddot{x}+2\zeta\omega_n\dot{x}+\omega_n^{2}x = 0,
-      \qquad \omega_n=\sqrt{\dfrac{k}{m}},\quad
-      \zeta=\dfrac{c}{2\sqrt{km}}.
-  \]
-  </p>
-  The dimensionless damping ratio \( \zeta \) determines the qualitative
-  behavior:
-  &nbsp;\( \zeta&lt;1 \) gives underdamped oscillations,
-  \( \zeta=1 \) is critical damping, and
-  \( \zeta&gt;1 \) is overdamped.
-</p>
+  <p>where:</p>
+  <ul>
+    <li>ωₙ = √(k/m) is the natural frequency</li>
+    <li>ζ = c / (2√(km)) is the damping ratio</li>
+  </ul>
 
-<h2>2&nbsp;&middot;&nbsp;Analytic Underdamped Solution</h2>
+  <h2>Solution Types</h2>
+  <p>The behavior depends on the value of damping ratio ζ:</p>
+  <ul>
+    <li><strong>Underdamped (ζ &lt; 1)</strong>: oscillates with decreasing amplitude</li>
+    <li><strong>Critically damped (ζ = 1)</strong>: returns to rest as quickly as possible without oscillating</li>
+    <li><strong>Overdamped (ζ &gt; 1)</strong>: returns to rest slowly without oscillating</li>
+  </ul>
 
-<p>
-  When \( \zeta&lt;1 \) the solution is an exponentially decaying cosine:
-  \[
-    x(t)=e^{-\zeta\omega_n t}\!
-          \Bigl(A\cos\omega_d t + B\sin\omega_d t\Bigr),\quad
-    \omega_d=\omega_n\sqrt{1-\zeta^{2}}.
-  \]
-  Constants \( A \) and \( B \) come from the initial displacement and
-  velocity.
-  Critical and overdamped cases have purely exponential (non‑oscillatory)
-  responses.
-</p>
+  <p>Solutions:</p>
+  <pre><code>// Underdamped
+x(t) = A * e^(-ζωₙt) * cos(ω_d t + φ), where ω_d = ωₙ * √(1 - ζ²)
 
-<h2>3&nbsp;&middot;&nbsp;Numerical Integration with RK4</h2>
+// Critically damped
+x(t) = (A + Bt) * e^(-ωₙt)
 
-<p>
-  Even though an analytic solution exists, a Runge–Kutta integrator is
-  included to demonstrate how one would treat a more complicated or
-  non‑linear variant.  The second‑order ODE is rewritten as two coupled
-  first‑order equations for \( x \) and \( v=\dot{x} \) and advanced with
-  the classical fourth‑order RK4 scheme.
-</p>
+// Overdamped
+x(t) = A * e^(r₁t) + B * e^(r₂t), where r₁, r₂ = -ωₙ(ζ ± √(ζ² - 1))</code></pre>
 
-<h2>4&nbsp;&middot;&nbsp;Interpreting the Plot</h2>
+  <h2>Numerical Solution with RK4</h2>
+  <p>We convert to a system of first-order ODEs:</p>
+  <pre><code>dx/dt = v
 
-<p>
-  The script plots both the analytic solution (for the underdamped case) and
-  the RK4 numerical result.  For appropriate step size \( \Delta t \) the two
-  curves coincide, illustrating the accuracy of RK4.  Changing the damping
-  coefficient in the code lets you visualise overdamped and critically
-  damped behavior as well.
-</p>
+dv/dt = -2ζωₙv - ωₙ²x</code></pre>
+  <p>The RK4 method approximates values step-by-step for better accuracy.</p>
 
-<h2>5&nbsp;&middot;&nbsp;Source Code</h2>
+  <h2>Simulation</h2>
 
-<p>
-  <a href="mass_spring_damper.py" target="_blank">mass_spring_damper.py</a>
-</p>
+  <label>Initial Displacement (x₀)</label>
+  <input type="range" id="x0Slider" min="-10" max="10" step="0.1" value="5">
+  <label>Initial Velocity (v₀)</label>
+  <input type="range" id="v0Slider" min="-10" max="10" step="0.1" value="0">
+  <label>Damping Type</label>
+  <select id="dampingSelect">
+    <option value="underdamped">Underdamped</option>
+    <option value="critical">Critically Damped</option>
+    <option value="overdamped">Overdamped</option>
+  </select>
 
-<h2>Back to Homepage</h2>
-<p><a href="../../index.html">← Return to main page</a></p>
+  <div class="plot-container">
+    <div>
+      <h3>Analytic Solution</h3>
+      <canvas id="analyticCanvas"></canvas>
+    </div>
+    <div>
+      <h3>RK4 Solution</h3>
+      <canvas id="rkCanvas"></canvas>
+    </div>
+  </div>
 
+  <h2>Energy & Phase Space</h2>
+  <canvas id="energyCanvas"></canvas>
+  <canvas id="phaseCanvas"></canvas>
+
+  <h2>Python Source Code</h2>
+  <p>Download the full Python script: <a href="/spring_mass_rk4.py" download>spring_mass_rk4.py</a></p>
+  <p>It defines a function that implements RK4 integration, compares with analytic results, and plots both. You can experiment by modifying the damping ratio and initial conditions.</p>
+
+  <script src="main.js"></script>
 </body>
 </html>
