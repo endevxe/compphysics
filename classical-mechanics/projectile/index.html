@@ -7,8 +7,32 @@
   <script type="text/javascript" async
     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    body{font-family:sans-serif;max-width:800px;margin:2rem auto;line-height:1.6;}
-    code{background:#f2f2f2;padding:2px 4px;border-radius:4px;}
+    body {
+      font-family: sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      line-height: 1.6;
+      background-color: #1e1a2b;
+      color: #e0d9ff;
+    }
+    h1, h2 {
+      color: #c299ff;
+    }
+    code {
+      background: #2b2438;
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: #e0d9ff;
+    }
+    a {
+      color: #dab6ff;
+    }
+    canvas {
+      display: block;
+      margin: 1rem auto;
+      background-color: #121018;
+      border: 1px solid #c299ff;
+    }
   </style>
 </head>
 <body>
@@ -16,61 +40,144 @@
 <h1>Projectile Motion with Quadratic Drag</h1>
 
 <p>
-  Real projectiles do not follow perfect parabolas because air resistance
-  acts opposite to the velocity.  A common empirical model assumes a drag
-  force proportional to the square of the speed,
-  \[
-     \mathbf{F}_{\text{drag}} = -k\,v\,\mathbf{v},
-  \]
-  where \( k \) depends on shape, cross‑sectional area, and air density.
-  For small objects at modest speeds this “quadratic drag” captures the
-  dominant dissipative effect.
+  Real projectiles experience air resistance, which alters their motion from the idealized parabolic path seen in vacuum. The drag force is often modeled as proportional to the square of the projectile’s speed:
 </p>
-
-<h2>1&nbsp;&middot;&nbsp;Equations of Motion</h2>
-
 <p>
-  Resolving forces horizontally and vertically for a projectile of mass
-  \( m \) gives
-  \[
-     \frac{dv_x}{dt} = -\frac{k}{m}\,v\,v_x, \qquad
-     \frac{dv_y}{dt} = -g -\frac{k}{m}\,v\,v_y,
-  \]
-  with \( v=\sqrt{v_x^{2}+v_y^{2}} \).
-  Integrating these together with
-  \( \frac{dx}{dt}=v_x \) and \( \frac{dy}{dt}=v_y \)
-  forms a set of four first‑order coupled ODEs.
-  Setting \( k=0 \) recovers the ideal, drag‑free parabola
-  \( y = x\tan\theta - \frac{gx^{2}}{2v_0^{2}\cos^{2}\theta} \).
+  \[ \mathbf{F}_{\text{drag}} = -k v \mathbf{v} \]
 </p>
-
-<h2>2&nbsp;&middot;&nbsp;Numerical Integration</h2>
-
 <p>
-  The code integrates both models using the classical fourth‑order
-  Runge–Kutta step.  Identical initial speed \( v_0 \) and launch angle
-  \( \theta \) are used; only the drag coefficient \( k \) is varied.
-  Because the system is theoretically defined once \( g, k, m, v_0,
-  \theta \) are chosen, no experimental data are required to plot and
-  compare trajectories.
+  where \( k \) is the drag coefficient, \( v \) is the speed (magnitude of velocity \( \mathbf{v} \)), and the force acts opposite to motion.
 </p>
 
-<h2>3&nbsp;&middot;&nbsp;Interpreting the Plot</h2>
-
+<h2>1 &middot; Equations of Motion</h2>
 <p>
-  The ideal path (no drag) is a perfect parabola and lands farthest
-  down‑range.  The drag‑affected path is flatter and lands sooner because
-  kinetic energy is continually removed by the air.  The stronger the
-  coefficient \( k \), the shorter and lower the real trajectory becomes.
+  For a projectile of mass \( m \), Newton’s second law in component form yields:
 </p>
-
-<h2>4&nbsp;&middot;&nbsp;Source Code</h2>
 <p>
-  <a href="projectile_drag.py" target="_blank">projectile_drag.py</a>
+  \[ \frac{dv_x}{dt} = -\frac{k}{m} v v_x, \quad \frac{dv_y}{dt} = -g -\frac{k}{m} v v_y \]
+</p>
+<p>
+  where \( v = \sqrt{v_x^2 + v_y^2} \). These equations are coupled and nonlinear due to the dependence on total speed \( v \).
+</p>
+<p>
+  To obtain the trajectory, integrate these alongside:
+</p>
+<p>
+  \[ \frac{dx}{dt} = v_x, \quad \frac{dy}{dt} = v_y \]
+</p>
+<p>
+  This gives a system of four coupled first-order ODEs.
 </p>
 
-<h2>Back to Homepage</h2>
-<p><a href="../../index.html">← Return to main page</a></p>
+<h2>2 &middot; Derivation of the System</h2>
+<p>
+  Starting from Newton’s Second Law:
+</p>
+<p>
+  \[ \mathbf{F} = m \frac{d\mathbf{v}}{dt} = \mathbf{F}_{\text{gravity}} + \mathbf{F}_{\text{drag}} \]
+</p>
+<p>
+  \[ \Rightarrow m \frac{d\mathbf{v}}{dt} = -mg \hat{j} - k v \mathbf{v} \]
+</p>
+<p>
+  Decomposing into components:
+</p>
+<ul>
+  <li>Horizontal: \( m \frac{dv_x}{dt} = -k v v_x \)</li>
+  <li>Vertical: \( m \frac{dv_y}{dt} = -mg - k v v_y \)</li>
+</ul>
+<p>
+  Divide by \( m \) throughout:
+</p>
+<p>
+  \[ \frac{dv_x}{dt} = -\frac{k}{m} v v_x, \quad \frac{dv_y}{dt} = -g -\frac{k}{m} v v_y \]
+</p>
+
+<h2>3 &middot; Numerical Integration</h2>
+<p>
+  These differential equations are solved numerically using a Runge-Kutta 4th order method. This integration computes position and velocity over time for both ideal and drag-affected trajectories.
+</p>
+<p>
+  Given initial speed \( v_0 \) and launch angle \( \theta \), we set:
+</p>
+<p>
+  \[ v_x(0) = v_0 \cos\theta, \quad v_y(0) = v_0 \sin\theta, \quad x(0) = 0, \quad y(0) = 0 \]
+</p>
+<p>
+  This allows us to compare parabolic motion (\( k=0 \)) with realistic, drag-influenced motion.
+</p>
+
+<h2>4 &middot; Interactive Simulation</h2>
+<canvas id="canvas" width="600" height="400"></canvas>
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+ctx.fillStyle = "#1e1a2b";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+const g = 9.81, m = 1.0, k = 0.05;
+const dt = 0.02;
+const theta = Math.PI / 4;
+const v0 = 40;
+let x = 0, y = 0, vx = v0 * Math.cos(theta), vy = v0 * Math.sin(theta);
+let trail = [];
+
+function step() {
+  let v = Math.sqrt(vx * vx + vy * vy);
+  let ax = -k * v * vx / m;
+  let ay = -g - k * v * vy / m;
+
+  vx += ax * dt;
+  vy += ay * dt;
+  x += vx * dt;
+  y += vy * dt;
+  trail.push([x, y]);
+}
+
+function draw() {
+  ctx.fillStyle = "#1e1a2b";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  for (let i = 0; i < trail.length; i++) {
+    let px = trail[i][0] * 5;
+    let py = canvas.height - trail[i][1] * 5;
+    ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = "#c299ff";
+  ctx.stroke();
+}
+
+function animate() {
+  if (y >= 0) {
+    step();
+    draw();
+    requestAnimationFrame(animate);
+  }
+}
+
+animate();
+</script>
+
+<h2>5 &middot; Python Source Code Explanation</h2>
+<p>
+  The Python file <code>projectile_drag.py</code> numerically simulates projectile motion with and without air resistance. It uses the Runge-Kutta method to integrate the same ODEs shown above and plots the trajectory using matplotlib.
+</p>
+<p>
+  Key components:
+</p>
+<ul>
+  <li>Define constants: gravity, drag coefficient, mass, initial speed, and angle</li>
+  <li>Compute initial velocities from angle and speed</li>
+  <li>Loop using RK4 to update position and velocity</li>
+  <li>Store trajectory points for both models</li>
+  <li>Plot trajectories for comparison</li>
+</ul>
+<p>
+  The result visually confirms that drag shortens range and flattens the arc.
+</p>
+
+<h2>6 &middot; Back to Homepage</h2>
+<p><a href="../../index.html">← Return to main page</a></p>
 
 </body>
 </html>
