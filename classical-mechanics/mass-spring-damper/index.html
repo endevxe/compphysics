@@ -107,13 +107,13 @@
 
   <p>Solutions:</p>
   <pre><code>// Underdamped
-x(t) = A * e^(-ζωₙt) * cos(ω_d t + φ), where ω_d = ωₙ * √(1 - ζ²)
-
-// Critically damped
-x(t) = (A + Bt) * e^(-ωₙt)
-
-// Overdamped
-x(t) = A * e^(r₁t) + B * e^(r₂t), where r₁, r₂ = -ωₙ(ζ ± √(ζ² - 1))</code></pre>
+  x(t) = A * e^(-ζωₙt) * cos(ω_d t + φ), where ω_d = ωₙ * √(1 - ζ²)
+  
+  // Critically damped
+  x(t) = (A + Bt) * e^(-ωₙt)
+  
+  // Overdamped
+  x(t) = A * e^(r₁t) + B * e^(r₂t), where r₁, r₂ = -ωₙ(ζ ± √(ζ² - 1))</code></pre>
 
   <h2>Numerical Solution with RK4</h2>
   <p>We convert to a system of first-order ODEs:</p>
@@ -144,6 +144,107 @@ dv/dt = -2ζωₙv - ωₙ²x</code></pre>
 
   <h2>4 · Analytic vs RK4 Solution</h2>
   <canvas id="comparisonPlot" width="700" height="300"></canvas>
+
+  <h2>4 · Analytic vs RK4 Solution</h2>
+<canvas id="comparisonPlot" width="700" height="300"></canvas>
+
+<script>
+  // JavaScript for plotting Analytic vs RK4
+  const canvas = document.getElementById("comparisonPlot");
+  const ctx = canvas.getContext("2d");
+
+  // System parameters
+  const m = 1.0;
+  const k = 10.0;
+  const c = 0.5;
+  const omega0 = Math.sqrt(k / m);
+  const zeta = c / (2 * Math.sqrt(k * m));
+
+  // Initial conditions
+  const x0 = 50;
+  const v0 = 0;
+  const dt = 0.02;
+  const totalTime = 10;
+
+  function analyticSolution(t) {
+    if (zeta < 1) {
+      const omega_d = omega0 * Math.sqrt(1 - zeta ** 2);
+      const A = x0;
+      const B = (v0 + zeta * omega0 * x0) / omega_d;
+      return Math.exp(-zeta * omega0 * t) * (A * Math.cos(omega_d * t) + B * Math.sin(omega_d * t));
+    } else {
+      return 0; // Overdamped/critically damped not handled
+    }
+  }
+
+  function rk4Step(state, dt) {
+    const [x, v] = state;
+
+    const dxdt = (x, v) => v;
+    const dvdt = (x, v) => (-k * x - c * v) / m;
+
+    const k1x = dt * dxdt(x, v);
+    const k1v = dt * dvdt(x, v);
+
+    const k2x = dt * dxdt(x + 0.5 * k1x, v + 0.5 * k1v);
+    const k2v = dt * dvdt(x + 0.5 * k1x, v + 0.5 * k1v);
+
+    const k3x = dt * dxdt(x + 0.5 * k2x, v + 0.5 * k2v);
+    const k3v = dt * dvdt(x + 0.5 * k2x, v + 0.5 * k2v);
+
+    const k4x = dt * dxdt(x + k3x, v + k3v);
+    const k4v = dt * dvdt(x + k3x, v + k3v);
+
+    const newX = x + (k1x + 2 * k2x + 2 * k3x + k4x) / 6;
+    const newV = v + (k1v + 2 * k2v + 2 * k3v + k4v) / 6;
+
+    return [newX, newV];
+  }
+
+  // Generate data
+  const analyticPoints = [];
+  const rk4Points = [];
+  let t = 0;
+  let state = [x0, v0];
+
+  while (t <= totalTime) {
+    analyticPoints.push(analyticSolution(t));
+    rk4Points.push(state[0]);
+    state = rk4Step(state, dt);
+    t += dt;
+  }
+
+  // Plotting
+  function drawComparison() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 2;
+
+    const scaleX = canvas.width / analyticPoints.length;
+    const scaleY = 2;
+
+    // Analytic - Purple
+    ctx.strokeStyle = "#c299ff";
+    ctx.beginPath();
+    ctx.moveTo(0, 150 - analyticPoints[0] / scaleY);
+    for (let i = 1; i < analyticPoints.length; i++) {
+      ctx.lineTo(i * scaleX, 150 - analyticPoints[i] / scaleY);
+    }
+    ctx.stroke();
+
+    // RK4 - White
+    ctx.strokeStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.moveTo(0, 150 - rk4Points[0] / scaleY);
+    for (let i = 1; i < rk4Points.length; i++) {
+      ctx.lineTo(i * scaleX, 150 - rk4Points[i] / scaleY);
+    }
+    ctx.stroke();
+  }
+
+  drawComparison();
+</script>
+
+  <p><span style="color:#c299ff;">Purple</span> = Analytic, <span style="color:#ffffff;">White</span> = RK4</p>
   
   <div class="plot-container">
     <div>
