@@ -59,6 +59,31 @@
 
   <p>This simulation compares the behavior of a mass-spring-damper system using an analytic solution and a numerical Runge-Kutta 4 (RK4) method.</p>
 
+  <h2>2 · Mathematical Model</h2>
+  <p>
+    The motion of a mass-spring-damper system is governed by Newton's second law:
+  </p>
+  <p>
+    $$ m \\ddot{x} + c \\dot{x} + kx = 0 $$
+  </p>
+  <p>
+    Where:
+    <ul>
+      <li><code>m</code> is the mass</li>
+      <li><code>c</code> is the damping coefficient</li>
+      <li><code>k</code> is the spring constant</li>
+      <li><code>x(t)</code> is the displacement from equilibrium</li>
+    </ul>
+  </p>
+  <p>
+    This is a second-order linear differential equation. Depending on the damping, it leads to:
+  </p>
+  <ul>
+    <li><strong>Underdamped</strong> (oscillatory): \( c^2 < 4mk \)</li>
+    <li><strong>Critically damped</strong>: \( c^2 = 4mk \)</li>
+    <li><strong>Overdamped</strong>: \( c^2 > 4mk \)</li>
+  </ul>
+  
   <h2>Mathematical Model</h2>
   <p>The system is modeled by a second-order differential equation:</p>
   <pre><code>m * d²x/dt² + c * dx/dt + k * x = 0</code></pre>
@@ -110,6 +135,16 @@ dv/dt = -2ζωₙv - ωₙ²x</code></pre>
     <option value="overdamped">Overdamped</option>
   </select>
 
+  <h2>3 · Controls</h2>
+  <label for="initialPosition">Initial Position (x₀)</label>
+  <input type="range" id="initialPosition" min="-100" max="100" value="50" step="1" oninput="updateInitialConditions()">
+  
+  <label for="initialVelocity">Initial Velocity (v₀)</label>
+  <input type="range" id="initialVelocity" min="-100" max="100" value="0" step="1" oninput="updateInitialConditions()">
+
+  <h2>4 · Analytic vs RK4 Solution</h2>
+  <canvas id="comparisonPlot" width="700" height="300"></canvas>
+  
   <div class="plot-container">
     <div>
       <h3>Analytic Solution</h3>
@@ -124,6 +159,24 @@ dv/dt = -2ζωₙv - ωₙ²x</code></pre>
   <h2>Energy & Phase Space</h2>
   <canvas id="energyCanvas"></canvas>
   <canvas id="phaseCanvas"></canvas>
+
+  <h2>5 · Python Source Breakdown</h2>
+  <p>
+    The Python script solves the same mass-spring-damper equation using the Runge-Kutta 4th order method.
+  </p>
+  <p>
+    <strong>Key Sections:</strong>
+    <ul>
+      <li><code>derivatives(t, y)</code>: Defines the differential equation</li>
+      <li><code>rk4()</code>: Numerically integrates using 4 intermediate slopes</li>
+      <li><code>matplotlib</code>: Plots the displacement over time</li>
+    </ul>
+  </p>
+  
+  <h2>6 · Source Code</h2>
+  <p>
+    <a href="mass_spring_damp.py" target="_blank">mass_spring_damp.py</a>
+  </p>
 
   <h2>Python Source Code</h2>
   <p>Download the full Python script: <a href="/spring_mass_rk4.py" download>spring_mass_rk4.py</a></p>
