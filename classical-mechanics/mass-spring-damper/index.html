@@ -122,144 +122,153 @@
 dv/dt = -2ζωₙv - ωₙ²x</code></pre>
   <p>The RK4 method approximates values step-by-step for better accuracy.</p>
 
-  <h2>Simulation</h2>
-
-  <label>Initial Displacement (x₀)</label>
-  <input type="range" id="x0Slider" min="-10" max="10" step="0.1" value="5">
-  <label>Initial Velocity (v₀)</label>
-  <input type="range" id="v0Slider" min="-10" max="10" step="0.1" value="0">
-  <label>Damping Type</label>
-  <select id="dampingSelect">
-    <option value="underdamped">Underdamped</option>
-    <option value="critical">Critically Damped</option>
-    <option value="overdamped">Overdamped</option>
-  </select>
-
-  <h2>3 · Controls</h2>
-  <label for="initialPosition">Initial Position (x₀)</label>
-  <input type="range" id="initialPosition" min="-100" max="100" value="50" step="1" oninput="updateInitialConditions()">
   
-  <label for="initialVelocity">Initial Velocity (v₀)</label>
-  <input type="range" id="initialVelocity" min="-100" max="100" value="0" step="1" oninput="updateInitialConditions()">
+<h2>2 · Simulation</h2>
+<p>This simulation models a mass-spring-damper system, where you can explore how different types of damping (none, under, over, critical) affect the oscillatory behavior. You can also compare the analytic solution to the numerical RK4 method, and observe how energy and phase space evolve over time.</p>
 
-  <h2>4 · Analytic vs RK4 Solution</h2>
-  <canvas id="comparisonPlot" width="700" height="300"></canvas>
+<label for="initialPosition">Initial Position (x₀):</label>
+<input type="range" id="initialPosition" min="-100" max="100" value="50" step="1" oninput="updateSimulation()">
 
-  <h2>4 · Analytic vs RK4 Solution</h2>
+<label for="initialVelocity">Initial Velocity (v₀):</label>
+<input type="range" id="initialVelocity" min="-100" max="100" value="0" step="1" oninput="updateSimulation()">
+
+<label for="dampingType">Damping Type:</label>
+<select id="dampingType" onchange="updateSimulation()">
+  <option value="none">None</option>
+  <option value="underdamped">Underdamped</option>
+  <option value="overdamped">Overdamped</option>
+  <option value="critical">Critically damped</option>
+</select>
+
+<h2>3 · RK4 vs Analytic</h2>
 <canvas id="comparisonPlot" width="700" height="300"></canvas>
+<p>This canvas compares the analytic and RK4 solutions. The purple curve shows the exact analytic solution derived using second-order ODEs, while the white curve shows the numerical approximation from the 4th-order Runge-Kutta method. The differences may become visible for stiffer systems or longer durations.</p>
+
+<h2>4 · Analytic Only</h2>
+<canvas id="analyticPlot" width="700" height="300"></canvas>
+<p>The analytic solution uses the formula for a damped harmonic oscillator depending on the damping ratio. It is exact under assumptions of linear damping and spring force. The solution changes character depending on whether the system is underdamped, overdamped, critically damped, or undamped.</p>
+
+<h2>5 · RK4 Only</h2>
+<canvas id="rk4Plot" width="700" height="300"></canvas>
+<p>The RK4 method numerically integrates the motion by considering slope estimates at four points per time step. It is widely used in physics simulations for its balance between speed and accuracy. This plot shows the RK4 output independently.</p>
+
+<h2>6 · Energy</h2>
+<canvas id="energyPlot" width="700" height="300"></canvas>
+<p>This plot shows the system’s total energy over time (kinetic + potential). In an undamped system, energy remains constant. With damping, energy decays due to resistive forces. This canvas helps visualize conservation or loss of energy.</p>
+
+<h2>7 · Phase Space</h2>
+<canvas id="phasePlot" width="700" height="300"></canvas>
+<p>The phase space plot shows velocity vs. position. Undamped systems trace out closed ellipses, while damped systems spiral into the origin. This diagram helps understand the long-term dynamics of the oscillator.</p>
 
 <script>
-  // JavaScript for plotting Analytic vs RK4
-  const canvas = document.getElementById("comparisonPlot");
-  const ctx = canvas.getContext("2d");
+const comparisonCanvas = document.getElementById("comparisonPlot").getContext("2d");
+const analyticCanvas = document.getElementById("analyticPlot").getContext("2d");
+const rk4Canvas = document.getElementById("rk4Plot").getContext("2d");
+const energyCanvas = document.getElementById("energyPlot").getContext("2d");
+const phaseCanvas = document.getElementById("phasePlot").getContext("2d");
 
-  // System parameters
-  const m = 1.0;
-  const k = 10.0;
-  const c = 0.5;
+function updateSimulation() {
+  const x0 = parseFloat(document.getElementById("initialPosition").value);
+  const v0 = parseFloat(document.getElementById("initialVelocity").value);
+  const dampingType = document.getElementById("dampingType").value;
+
+  let m = 1.0, k = 10.0, c = 0.0;
+  if (dampingType === "underdamped") c = 0.5;
+  if (dampingType === "critical") c = 2 * Math.sqrt(k * m);
+  if (dampingType === "overdamped") c = 6.0;
+
   const omega0 = Math.sqrt(k / m);
   const zeta = c / (2 * Math.sqrt(k * m));
-
-  // Initial conditions
-  const x0 = 50;
-  const v0 = 0;
   const dt = 0.02;
   const totalTime = 10;
-
-  function analyticSolution(t) {
-    if (zeta < 1) {
-      const omega_d = omega0 * Math.sqrt(1 - zeta ** 2);
-      const A = x0;
-      const B = (v0 + zeta * omega0 * x0) / omega_d;
-      return Math.exp(-zeta * omega0 * t) * (A * Math.cos(omega_d * t) + B * Math.sin(omega_d * t));
-    } else {
-      return 0; // Overdamped/critically damped not handled
-    }
-  }
-
-  function rk4Step(state, dt) {
-    const [x, v] = state;
-
-    const dxdt = (x, v) => v;
-    const dvdt = (x, v) => (-k * x - c * v) / m;
-
-    const k1x = dt * dxdt(x, v);
-    const k1v = dt * dvdt(x, v);
-
-    const k2x = dt * dxdt(x + 0.5 * k1x, v + 0.5 * k1v);
-    const k2v = dt * dvdt(x + 0.5 * k1x, v + 0.5 * k1v);
-
-    const k3x = dt * dxdt(x + 0.5 * k2x, v + 0.5 * k2v);
-    const k3v = dt * dvdt(x + 0.5 * k2x, v + 0.5 * k2v);
-
-    const k4x = dt * dxdt(x + k3x, v + k3v);
-    const k4v = dt * dvdt(x + k3x, v + k3v);
-
-    const newX = x + (k1x + 2 * k2x + 2 * k3x + k4x) / 6;
-    const newV = v + (k1v + 2 * k2v + 2 * k3v + k4v) / 6;
-
-    return [newX, newV];
-  }
-
-  // Generate data
-  const analyticPoints = [];
-  const rk4Points = [];
   let t = 0;
   let state = [x0, v0];
 
+  const analytic = [], rk4 = [], pos = [], vel = [], time = [];
+
+  function rk4Step([x, v], dt) {
+    const dx = (x, v) => v;
+    const dv = (x, v) => (-k * x - c * v) / m;
+    const k1x = dt * dx(x, v), k1v = dt * dv(x, v);
+    const k2x = dt * dx(x + 0.5 * k1x, v + 0.5 * k1v), k2v = dt * dv(x + 0.5 * k1x, v + 0.5 * k1v);
+    const k3x = dt * dx(x + 0.5 * k2x, v + 0.5 * k2v), k3v = dt * dv(x + 0.5 * k2x, v + 0.5 * k2v);
+    const k4x = dt * dx(x + k3x, v + k3v), k4v = dt * dv(x + k3x, v + k3v);
+    return [x + (k1x + 2 * k2x + 2 * k3x + k4x) / 6, v + (k1v + 2 * k2v + 2 * k3v + k4v) / 6];
+  }
+
+  function analyticSol(t) {
+    if (zeta < 1) {
+      const wd = omega0 * Math.sqrt(1 - zeta * zeta);
+      const A = x0;
+      const B = (v0 + zeta * omega0 * x0) / wd;
+      return Math.exp(-zeta * omega0 * t) * (A * Math.cos(wd * t) + B * Math.sin(wd * t));
+    }
+    return 0;
+  }
+
   while (t <= totalTime) {
-    analyticPoints.push(analyticSolution(t));
-    rk4Points.push(state[0]);
+    analytic.push(analyticSol(t));
+    rk4.push(state[0]);
+    pos.push(state[0]);
+    vel.push(state[1]);
+    time.push(t);
     state = rk4Step(state, dt);
     t += dt;
   }
 
-  // Plotting
-  function drawComparison() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.lineWidth = 2;
-
-    const scaleX = canvas.width / analyticPoints.length;
-    const scaleY = 2;
-
-    // Analytic - Purple
-    ctx.strokeStyle = "#c299ff";
+  function plotLine(ctx, data, color, label) {
+    ctx.clearRect(0, 0, 700, 300);
     ctx.beginPath();
-    ctx.moveTo(0, 150 - analyticPoints[0] / scaleY);
-    for (let i = 1; i < analyticPoints.length; i++) {
-      ctx.lineTo(i * scaleX, 150 - analyticPoints[i] / scaleY);
-    }
-    ctx.stroke();
-
-    // RK4 - White
-    ctx.strokeStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.moveTo(0, 150 - rk4Points[0] / scaleY);
-    for (let i = 1; i < rk4Points.length; i++) {
-      ctx.lineTo(i * scaleX, 150 - rk4Points[i] / scaleY);
-    }
+    ctx.strokeStyle = color;
+    data.forEach((val, i) => {
+      const x = i * 700 / data.length;
+      const y = 150 - val * 2;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
     ctx.stroke();
   }
 
-  drawComparison();
+  plotLine(comparisonCanvas, analytic, "#c299ff");
+  plotLine(comparisonCanvas, rk4, "#ffffff");
+  plotLine(analyticCanvas, analytic, "#c299ff");
+  plotLine(rk4Canvas, rk4, "#ffffff");
+
+  energyCanvas.clearRect(0, 0, 700, 300);
+  energyCanvas.beginPath();
+  energyCanvas.strokeStyle = "lime";
+  for (let i = 0; i < time.length; i++) {
+    const ke = 0.5 * m * vel[i] * vel[i];
+    const pe = 0.5 * k * pos[i] * pos[i];
+    const total = ke + pe;
+    const x = i * 700 / time.length;
+    const y = 150 - total;
+    if (i === 0) energyCanvas.moveTo(x, y);
+    else energyCanvas.lineTo(x, y);
+  }
+  energyCanvas.stroke();
+
+  phaseCanvas.clearRect(0, 0, 700, 300);
+  phaseCanvas.beginPath();
+  phaseCanvas.strokeStyle = "#ff66cc";
+  for (let i = 0; i < pos.length; i++) {
+    const x = 350 + pos[i] * 10;
+    const y = 150 - vel[i] * 10;
+    if (i === 0) phaseCanvas.moveTo(x, y);
+    else phaseCanvas.lineTo(x, y);
+  }
+  phaseCanvas.stroke();
+}
+
+updateSimulation();
 </script>
 
-  <p><span style="color:#c299ff;">Purple</span> = Analytic, <span style="color:#ffffff;">White</span> = RK4</p>
-  
-  <div class="plot-container">
-    <div>
-      <h3>Analytic Solution</h3>
-      <canvas id="analyticCanvas"></canvas>
-    </div>
-    <div>
-      <h3>RK4 Solution</h3>
-      <canvas id="rkCanvas"></canvas>
-    </div>
-  </div>
+<h2>8 · Python Source</h2>
+<p>
+  <a href="mass_spring_damper.py" target="_blank">mass_spring_damper.py</a>
+</p>
+<p>This Python file implements the same mass-spring-damper system using Matplotlib for plotting and RK4 for integration. It allows comparing numerical accuracy between the browser and desktop-based tools.</p>
 
-  <h2>Energy & Phase Space</h2>
-  <canvas id="energyCanvas"></canvas>
-  <canvas id="phaseCanvas"></canvas>
 
   <h2>5 · Python Source Breakdown</h2>
   <p>
