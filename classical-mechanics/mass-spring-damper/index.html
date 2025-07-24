@@ -64,63 +64,53 @@
     The motion of a mass-spring-damper system is governed by Newton's second law:
   </p>
   <p>
-    $$ m \\ddot{x} + c \\dot{x} + kx = 0 $$
+    $$ m \ddot{x} + c \dot{x} + kx = 0 $$
   </p>
-  <p>
-    Where:
-    <ul>
-      <li><code>m</code> is the mass</li>
-      <li><code>c</code> is the damping coefficient</li>
-      <li><code>k</code> is the spring constant</li>
-      <li><code>x(t)</code> is the displacement from equilibrium</li>
-    </ul>
-  </p>
-  <p>
-    This is a second-order linear differential equation. Depending on the damping, it leads to:
-  </p>
+  <p>Where:</p>
   <ul>
-    <li><strong>Underdamped</strong> (oscillatory): \( c^2 < 4mk \)</li>
+    <li><code>m</code> is the mass</li>
+    <li><code>c</code> is the damping coefficient</li>
+    <li><code>k</code> is the spring constant</li>
+    <li><code>x(t)</code> is the displacement from equilibrium</li>
+  </ul>
+
+  <p>This is a second-order linear differential equation. Depending on the damping, it leads to:</p>
+  <ul>
+    <li><strong>Underdamped</strong> (oscillatory): \( c^2 &lt; 4mk \)</li>
     <li><strong>Critically damped</strong>: \( c^2 = 4mk \)</li>
-    <li><strong>Overdamped</strong>: \( c^2 > 4mk \)</li>
+    <li><strong>Overdamped</strong>: \( c^2 &gt; 4mk \)</li>
   </ul>
-  
-  <h2>Mathematical Model</h2>
-  <p>The system is modeled by a second-order differential equation:</p>
-  <pre><code>m * d²x/dt² + c * dx/dt + k * x = 0</code></pre>
 
-  <p>We normalize the equation by dividing through by mass <code>m</code>:</p>
-  <pre><code>d²x/dt² + 2ζωₙ dx/dt + ωₙ²x = 0</code></pre>
+  <p>We can also normalize the equation by dividing through by the mass \( m \):</p>
+  <p>
+    $$ \ddot{x} + 2\zeta \omega_n \dot{x} + \omega_n^2 x = 0 $$
+  </p>
 
-  <p>where:</p>
+  <p>Where:</p>
   <ul>
-    <li>ωₙ = √(k/m) is the natural frequency</li>
-    <li>ζ = c / (2√(km)) is the damping ratio</li>
+    <li>\( \omega_n = \sqrt{\frac{k}{m}} \) is the natural frequency</li>
+    <li>\( \zeta = \frac{c}{2\sqrt{km}} \) is the damping ratio</li>
   </ul>
 
-  <h2>Solution Types</h2>
-  <p>The behavior depends on the value of damping ratio ζ:</p>
+  <h2>3 · Solution Types</h2>
+  <p>The behavior depends on the value of the damping ratio \( \zeta \):</p>
   <ul>
     <li><strong>Underdamped (ζ &lt; 1)</strong>: oscillates with decreasing amplitude</li>
     <li><strong>Critically damped (ζ = 1)</strong>: returns to rest as quickly as possible without oscillating</li>
     <li><strong>Overdamped (ζ &gt; 1)</strong>: returns to rest slowly without oscillating</li>
   </ul>
 
-  <p>Solutions:</p>
-  <pre><code>// Underdamped
-  x(t) = A * e^(-ζωₙt) * cos(ω_d t + φ), where ω_d = ωₙ * √(1 - ζ²)
+  <p><strong>Analytic solutions:</strong></p>
+  <p><strong>Underdamped:</strong></p>
+  <p>$$ x(t) = A e^{-ζω_n t} \cos(ω_d t + \phi), \quad \text{where } ω_d = ω_n \sqrt{1 - ζ^2} $$</p>
   
-  // Critically damped
-  x(t) = (A + Bt) * e^(-ωₙt)
+  <p><strong>Critically damped:</strong></p>
+  <p>$$ x(t) = (A + Bt) e^{-ω_n t} $$</p>
   
-  // Overdamped
-  x(t) = A * e^(r₁t) + B * e^(r₂t), where r₁, r₂ = -ωₙ(ζ ± √(ζ² - 1))</code></pre>
+  <p><strong>Overdamped:</strong></p>
+  <p>$$ x(t) = A e^{r_1 t} + B e^{r_2 t}, \quad \text{where } r_1, r_2 = -ω_n(ζ \pm \sqrt{ζ^2 - 1}) $$</p>
 
-  <h2>Numerical Solution with RK4</h2>
-  <p>We convert to a system of first-order ODEs:</p>
-  <pre><code>dx/dt = v
-
-dv/dt = -2ζωₙv - ωₙ²x</code></pre>
-  <p>The RK4 method approximates values step-by-step for better accuracy.</p>
+  <p>The RK4 method approximates values step-by-step with high accuracy, solving the system over small time steps.</p>
 
   
 <h2>2 · Simulation</h2>
