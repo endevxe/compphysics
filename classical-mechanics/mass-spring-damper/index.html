@@ -258,7 +258,7 @@ function updateSimulation() {
     const pe = 0.5 * k * pos[i] * pos[i];
     const total = ke + pe;
     const x = i * 700 / time.length;
-    const y = 300 - total * 100;
+    const y = 150 - total;
     if (i === 0) energyCanvas.moveTo(x, y);
     else energyCanvas.lineTo(x, y);
   }
@@ -268,8 +268,8 @@ function updateSimulation() {
   phaseCanvas.beginPath();
   phaseCanvas.strokeStyle = "#ff66cc";
   for (let i = 0; i < pos.length; i++) {
-    const x = 350 + pos[i] * 50;
-    const y = 150 - vel[i] * 50;
+    const x = 350 + pos[i] * 10;
+    const y = 150 - vel[i] * 10;
     if (i === 0) phaseCanvas.moveTo(x, y);
     else phaseCanvas.lineTo(x, y);
   }
