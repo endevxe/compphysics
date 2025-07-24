@@ -163,6 +163,29 @@
 <canvas id="phasePlot" width="700" height="300"></canvas>
 <p>The phase space plot shows velocity vs. position. Undamped systems trace out closed ellipses, while damped systems spiral into the origin. This diagram helps understand the long-term dynamics of the oscillator.</p>
 
+<div style="margin-bottom: 20px;">
+  <label>
+    Initial Position:
+    <input type="number" id="initialPosition" value="1" step="0.1">
+  </label>
+
+  <label>
+    Initial Velocity:
+    <input type="number" id="initialVelocity" value="0" step="0.1">
+  </label>
+
+  <label>
+    Damping Type:
+    <select id="dampingType">
+      <option value="underdamped">Underdamped</option>
+      <option value="critical">Critically Damped</option>
+      <option value="overdamped">Overdamped</option>
+    </select>
+  </label>
+
+  <button onclick="updateSimulation()">Run Simulation</button>
+</div>
+
 <script>
 const comparisonCanvas = document.getElementById("comparisonPlot").getContext("2d");
 const analyticCanvas = document.getElementById("analyticPlot").getContext("2d");
