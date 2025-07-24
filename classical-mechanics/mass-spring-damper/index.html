@@ -72,7 +72,7 @@
 
   <p>This simulation compares the behavior of a mass-spring-damper system using an analytic solution and a numerical Runge-Kutta 4 (RK4) method.</p>
 
-  <h2>2 · Mathematical Model</h2>
+  <h2>1 · Mathematical Model</h2>
   <p>
     The motion of a mass-spring-damper system is governed by Newton's second law:
   </p>
@@ -105,7 +105,7 @@
     <li>\( \zeta = \frac{c}{2\sqrt{km}} \) is the damping ratio</li>
   </ul>
 
-  <h2>3 · Solution Types</h2>
+  <h2>2 · Solution Types</h2>
   <p>The behavior depends on the value of the damping ratio \( \zeta \):</p>
   <ul>
     <li><strong>Underdamped (ζ &lt; 1)</strong>: oscillates with decreasing amplitude</li>
@@ -126,7 +126,7 @@
   <p>The RK4 method approximates values step-by-step with high accuracy, solving the system over small time steps.</p>
 
   
-<h2>2 · Simulation</h2>
+<h2>3 · Simulation</h2>
 <p>This simulation models a mass-spring-damper system, where you can explore how different types of damping (none, under, over, critical) affect the oscillatory behavior. You can also compare the analytic solution to the numerical RK4 method, and observe how energy and phase space evolve over time.</p>
 
 <label for="initialPosition">Initial Position (x₀):</label>
@@ -143,23 +143,23 @@
   <option value="critical">Critically damped</option>
 </select>
 
-<h2>3 · RK4 vs Analytic</h2>
+<h2>4 · RK4 vs Analytic</h2>
 <canvas id="comparisonPlot" width="700" height="300"></canvas>
 <p>This canvas compares the analytic and RK4 solutions. The purple curve shows the exact analytic solution derived using second-order ODEs, while the white curve shows the numerical approximation from the 4th-order Runge-Kutta method. The differences may become visible for stiffer systems or longer durations.</p>
 
-<h2>4 · Analytic Only</h2>
+<h2>5 · Analytic Only</h2>
 <canvas id="analyticPlot" width="700" height="300"></canvas>
 <p>The analytic solution uses the formula for a damped harmonic oscillator depending on the damping ratio. It is exact under assumptions of linear damping and spring force. The solution changes character depending on whether the system is underdamped, overdamped, critically damped, or undamped.</p>
 
-<h2>5 · RK4 Only</h2>
+<h2>6 · RK4 Only</h2>
 <canvas id="rk4Plot" width="700" height="300"></canvas>
 <p>The RK4 method numerically integrates the motion by considering slope estimates at four points per time step. It is widely used in physics simulations for its balance between speed and accuracy. This plot shows the RK4 output independently.</p>
 
-<h2>6 · Energy</h2>
+<h2>7 · Energy</h2>
 <canvas id="energyPlot" width="700" height="300"></canvas>
 <p>This plot shows the system’s total energy over time (kinetic + potential). In an undamped system, energy remains constant. With damping, energy decays due to resistive forces. This canvas helps visualize conservation or loss of energy.</p>
 
-<h2>7 · Phase Space</h2>
+<h2>8 · Phase Space</h2>
 <canvas id="phasePlot" width="700" height="300"></canvas>
 <p>The phase space plot shows velocity vs. position. Undamped systems trace out closed ellipses, while damped systems spiral into the origin. This diagram helps understand the long-term dynamics of the oscillator.</p>
 
@@ -266,14 +266,14 @@ function updateSimulation() {
 updateSimulation();
 </script>
 
-<h2>8 · Python Source</h2>
+<h2>9 · Python Source</h2>
 <p>
   <a href="mass_spring_damper.py" target="_blank">mass_spring_damper.py</a>
 </p>
 <p>This Python file implements the same mass-spring-damper system using Matplotlib for plotting and RK4 for integration. It allows comparing numerical accuracy between the browser and desktop-based tools.</p>
 
 
-  <h2>5 · Python Source Breakdown</h2>
+  <h2>10 · Python Source Breakdown</h2>
   <p>
     The Python script solves the same mass-spring-damper equation using the Runge-Kutta 4th order method.
   </p>
