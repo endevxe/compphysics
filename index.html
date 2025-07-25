@@ -8,6 +8,9 @@
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000;
@@ -16,6 +19,7 @@
       --link: #ffffff;
     }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       background: var(--bg);
@@ -149,95 +153,103 @@
       color: #888;
     }
 
-/* Hero Section (Dark Theme) */
-.hero {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: radial-gradient(circle at top left, #0f172a, #1e293b);
-  border-bottom: 2px solid #334155;
-}
+    
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  color: #f8fafc; /* Light text */
-  font-family: 'Inter', sans-serif;
-}
+    /* Hero Section (Dark Theme) */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: radial-gradient(circle at top left, #0f172a, #1e293b);
+      border-bottom: 2px solid #334155;
+    }
 
-.tagline {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #94a3b8; /* Muted slate */
-  margin-bottom: 1rem;
-  font-family: 'Inter', sans-serif;
-}
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      color: #f8fafc; /* Light text */
+      font-family: 'Inter', sans-serif;
+    }
 
-.intro {
-  max-width: 600px;
-  margin: 0 auto 2rem;
-  font-size: 1rem;
-  color: #cbd5e1; /* Slate gray-blue */
-  font-family: 'Inter', sans-serif;
-}
+    .tagline {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #94a3b8; /* Muted slate */
+      margin-bottom: 1rem;
+      font-family: 'Inter', sans-serif;
+    }
 
-.hero-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
+    .intro {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      font-size: 1rem;
+      color: #cbd5e1; /* Slate gray-blue */
+      font-family: 'Inter', sans-serif;
+    }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 2rem;
-  font-weight: 600;
-  background-color: #3b82f6; /* Vibrant blue */
-  color: #f8fafc;
-  text-decoration: none;
-  transition: background 0.3s ease, transform 0.2s ease;
-  font-family: 'Inter', sans-serif;
-}
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
 
-.btn:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-}
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      background-color: #3b82f6; /* Vibrant blue */
+      color: #f8fafc;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
 
-/* Feature Boxes (Dark Theme) */
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  padding: 3rem 2rem;
-  background-color: #0f172a; /* Deep navy/blackish blue */
-}
+    .btn:hover {
+      background-color: #2563eb;
+      transform: translateY(-2px);
+    }
 
-.feature-box {
-  background: #1e293b; /* Dark slate */
-  border-radius: 1rem;
-  padding: 2rem;
-  text-align: center;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    /* Feature Boxes (Dark Theme) */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 3rem 2rem;
+      background-color: #0f172a; /* Deep navy/blackish blue */
+    }
 
-.feature-box:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
-}
+    .feature-box {
+      background: #1e293b; /* Dark slate */
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.feature-box h3 {
-  font-size: 1.35rem;
-  margin-bottom: 0.75rem;
-  color: #f1f5f9; /* Light slate */
-  font-family: 'Inter', sans-serif;
-}
+    .feature-box:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+    }
 
-.feature-box p {
-  font-size: 1rem;
-  color: #cbd5e1; /* Gray-blue */
-  font-family: 'Inter', sans-serif;
-}
+    .feature-box h3 {
+      font-size: 1.35rem;
+      margin-bottom: 0.75rem;
+      color: #f1f5f9; /* Light slate */
+      font-family: 'Inter', sans-serif;
+    }
+
+    .feature-box p {
+      font-size: 1rem;
+      color: #cbd5e1; /* Gray-blue */
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background-color: #0f0f1b; /* Deep black-blue */
+      color: #e5e7eb; /* Light gray for contrast */
+    }
   </style>
 </head>
 <body>
@@ -256,19 +268,19 @@
 
 <!-- Hero Section -->
 <section class="hero" role="banner">
-  <h1 style="font-family: 'Inter', sans-serif;">Episteme</h1>
-  <h2 class="tagline" style="font-family: 'Inter', sans-serif;">A Repository of Simulations</h2>
-  <p class="intro" style="font-family: 'Inter', sans-serif;">
+  <h1>Episteme</h1>
+  <h2 class="tagline">A Repository of Simulations</h2>
+  <p class="intro">
     Explore theoretical physics and mathematics through interactive simulations.
     Built for learners, educators, and the curious.
   </p>
   <div class="hero-buttons">
-    <a href="#simulations" class="btn" style="font-family: 'Inter', sans-serif;">Browse Simulations</a>
+    <a href="#simulations" class="btn">Browse Simulations</a>
   </div>
 </section>
 
 <!-- Feature Boxes -->
-<section class="features" role="region" aria-label="Simulation Features" style="font-family: 'Inter', sans-serif;">
+<section class="features" role="region" aria-label="Simulation Features">
   <div class="feature-box">
     <h3>Interactive</h3>
     <p>Explore models dynamically with adjustable parameters and real-time visualization.</p>
