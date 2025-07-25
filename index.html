@@ -146,6 +146,87 @@
       font-size: 0.9rem;
       color: #888;
     }
+
+    /* Hero Section */
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: radial-gradient(circle at top left, #eef2ff, #e0e7ff);
+  border-bottom: 2px solid #d1d5db;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #1e1e2f;
+}
+
+.tagline {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+.intro {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  background-color: #4f46e5;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #4338ca;
+}
+
+/* Feature Boxes */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 3rem 2rem;
+  background-color: #f9fafb;
+}
+
+.feature-box {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+}
+
+.feature-box h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+}
+
+.feature-box p {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
   </style>
 </head>
 <body>
@@ -162,16 +243,32 @@
   </nav>
 </header>
 
+<!-- Hero Section -->
 <section class="hero">
   <h1>Episteme</h1>
   <h2 class="tagline">A Repository of Simulations</h2>
   <p class="intro">
-    Explore theoretical physics and mathematics through open-source models. From orbital mechanics to quantum systems, every simulation includes full documentation, derivations, and source code.
+    Explore theoretical physics and mathematics through interactive simulations.
+    Built for learners, educators, and the curious.
   </p>
   <div class="hero-buttons">
     <a href="#simulations" class="btn">Browse Simulations</a>
-    <a href="#docs" class="btn btn-secondary">Read Documentation</a>
-    <a href="#suggest" class="btn btn-outline">Suggest a Simulation</a>
+  </div>
+</section>
+
+<!-- Feature Boxes -->
+<section class="features">
+  <div class="feature-box">
+    <h3>🔬 Interactive</h3>
+    <p>Explore models dynamically with adjustable parameters and real-time visualization.</p>
+  </div>
+  <div class="feature-box">
+    <h3>📘 Documented</h3>
+    <p>Every simulation is backed with detailed derivations, explanations, and usage guides.</p>
+  </div>
+  <div class="feature-box">
+    <h3>💻 Open Source</h3>
+    <p>All code is available on GitHub for inspection, modification, and contribution.</p>
   </div>
 </section>
 
