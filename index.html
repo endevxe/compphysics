@@ -162,15 +162,23 @@
   </nav>
 </header>
 
-  <section class="hero">
-    <h1>A Repository Of Simulations</h1>
-    <h2>Theoretical Models • Open Source • Documentation</h2>
-  </section>
-
-  <div class="search-bar">
-    <input id="search" type="text" placeholder="Search simulations…" />
-    <button onclick="resetSearch()">✖</button>
+<section class="hero">
+  <h1>Episteme</h1>
+  <h2 class="tagline">A Repository of Simulations</h2>
+  <p class="intro">
+    Explore theoretical physics and mathematics through open-source models. From orbital mechanics to quantum systems, every simulation includes full documentation, derivations, and source code.
+  </p>
+  <div class="hero-buttons">
+    <a href="#simulations" class="btn">Browse Simulations</a>
+    <a href="#docs" class="btn btn-secondary">Read Documentation</a>
+    <a href="#suggest" class="btn btn-outline">Suggest a Simulation</a>
   </div>
+</section>
+
+<div class="search-bar">
+  <input id="search" type="text" placeholder="Search simulations…" />
+  <button onclick="resetSearch()">✖</button>
+</div>
 
   <main id="simulations" class="container">
     <div class="category-box" onclick="location.href='classical-mechanics/index.html'">
