@@ -6,6 +6,8 @@
   <title>Episteme</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000;
@@ -147,85 +149,94 @@
       color: #888;
     }
 
-    /* Hero Section */
+/* Hero Section (Dark Theme) */
 .hero {
   text-align: center;
   padding: 4rem 2rem;
-  background: radial-gradient(circle at top left, #4338ca, #849ef3);
-  border-bottom: 2px solid #d1d5db;
+  background: radial-gradient(circle at top left, #0f172a, #1e293b);
+  border-bottom: 2px solid #334155;
 }
 
 .hero h1 {
   font-size: 3rem;
   margin-bottom: 0.5rem;
-  color: #1e1e2f;
+  color: #f8fafc; /* Light text */
+  font-family: 'Inter', sans-serif;
 }
 
 .tagline {
   font-size: 1.5rem;
   font-weight: 500;
-  color: #444;
+  color: #94a3b8; /* Muted slate */
   margin-bottom: 1rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .intro {
   max-width: 600px;
   margin: 0 auto 2rem;
   font-size: 1rem;
-  color:  rgb(51, 56, 71);
+  color: #cbd5e1; /* Slate gray-blue */
+  font-family: 'Inter', sans-serif;
 }
 
 .hero-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .btn {
   padding: 0.75rem 1.5rem;
   border-radius: 2rem;
   font-weight: 600;
-  background-color: #4f46e5;
-  color: rgb(27, 21, 72);
+  background-color: #3b82f6; /* Vibrant blue */
+  color: #f8fafc;
   text-decoration: none;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: 'Inter', sans-serif;
 }
 
 .btn:hover {
-  background-color: #4338ca;
+  background-color: #2563eb;
+  transform: translateY(-2px);
 }
 
-/* Feature Boxes */
+/* Feature Boxes (Dark Theme) */
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   padding: 3rem 2rem;
-  background-color: #2669ac;
+  background-color: #0f172a; /* Deep navy/blackish blue */
 }
 
 .feature-box {
-  background: rgb(51, 56, 71);
+  background: #1e293b; /* Dark slate */
   border-radius: 1rem;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-box:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
 }
 
 .feature-box h3 {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   margin-bottom: 0.75rem;
-  color: #1f2937;
+  color: #f1f5f9; /* Light slate */
+  font-family: 'Inter', sans-serif;
 }
 
 .feature-box p {
-  font-size: 0.95rem;
-  color: #4b5563;
+  font-size: 1rem;
+  color: #cbd5e1; /* Gray-blue */
+  font-family: 'Inter', sans-serif;
 }
   </style>
 </head>
