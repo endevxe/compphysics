@@ -1,43 +1,125 @@
-// Hamming window to smooth signal edges
-function applyHammingWindow(signal) {
-  return signal.map((val, i) => {
-    const w = 0.54 - 0.46 * Math.cos((2 * Math.PI * i) / (signal.length - 1));
-    return val * w;
+let audioContext, analyser, dataArray, sourceNode, recorder;
+let recording = false;
+let chunks = [];
+
+const startBtn = document.getElementById("start-btn");
+const stopBtn = document.getElementById("stop-btn");
+const micIcon = document.getElementById("mic-icon");
+const equationBox = document.getElementById("equation");
+const canvas = document.getElementById("waveform");
+const canvasCtx = canvas.getContext("2d");
+
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
+
+startBtn.addEventListener("click", async () => {
+  if (recording) return;
+  recording = true;
+  chunks = [];
+
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+  sourceNode = audioContext.createMediaStreamSource(stream);
+  analyser = audioContext.createAnalyser();
+  analyser.fftSize = 2048;
+
+  const bufferLength = analyser.fftSize;
+  dataArray = new Uint8Array(bufferLength);
+
+  sourceNode.connect(analyser);
+
+  recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = (e) => chunks.push(e.data);
+  recorder.onstop = () => {
+    const blob = new Blob(chunks);
+    analyzeAudio(blob);
+  };
+  recorder.start();
+
+  micIcon.classList.add("active");
+  drawWaveform(); // start drawing
+});
+
+stopBtn.addEventListener("click", () => {
+  if (!recording) return;
+  recording = false;
+  recorder.stop();
+  micIcon.classList.remove("active");
+});
+
+function drawWaveform() {
+  if (!recording) return;
+
+  requestAnimationFrame(drawWaveform);
+
+  analyser.getByteTimeDomainData(dataArray);
+
+  canvasCtx.fillStyle = "#111";
+  canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+  canvasCtx.lineWidth = 2;
+  canvasCtx.strokeStyle = "#00ff88";
+  canvasCtx.beginPath();
+
+  const sliceWidth = canvas.width / dataArray.length;
+  let x = 0;
+
+  for (let i = 0; i < dataArray.length; i++) {
+    const v = dataArray[i] / 128.0; // Normalize
+    const y = (v * canvas.height) / 2;
+
+    if (i === 0) {
+      canvasCtx.moveTo(x, y);
+    } else {
+      canvasCtx.lineTo(x, y);
+    }
+    x += sliceWidth;
+  }
+
+  canvasCtx.lineTo(canvas.width, canvas.height / 2);
+  canvasCtx.stroke();
+}
+
+function analyzeAudio(blob) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    audioContext.decodeAudioData(reader.result, (buffer) => {
+      const channelData = buffer.getChannelData(0);
+      const fftData = fft(channelData);
+      const freqPeaks = findPeaks(fftData);
+      const equation = convertToEquation(freqPeaks);
+      equationBox.textContent = equation;
+    });
+  };
+  reader.readAsArrayBuffer(blob);
+}
+
+function fft(buffer) {
+  // Simple FFT stub - replace with real lib like DSP.js or similar
+  const N = buffer.length;
+  const freq = new Float32Array(N);
+  for (let i = 0; i < N; i++) freq[i] = Math.abs(buffer[i]);
+  return freq;
+}
+
+function findPeaks(fftData) {
+  const peaks = [];
+  for (let i = 1; i < fftData.length - 1; i++) {
+    if (fftData[i] > fftData[i - 1] && fftData[i] > fftData[i + 1]) {
+      peaks.push({ index: i, amplitude: fftData[i] });
+    }
+  }
+  return peaks.slice(0, 5); // Top 5 peaks
+}
+
+function convertToEquation(peaks) {
+  let equation = "f(t) = ";
+  peaks.forEach((p, i) => {
+    const freq = (p.index * audioContext.sampleRate) / analyser.fftSize;
+    const amp = (p.amplitude * 10).toFixed(2);
+    equation += `${amp}·sin(2π·${freq.toFixed(1)}t)`;
+    if (i < peaks.length - 1) equation += " + ";
   });
-}
-
-// Zero-padding to next power of 2
-function zeroPadToNextPowerOf2(arr) {
-  const len = arr.length;
-  const size = Math.pow(2, Math.ceil(Math.log2(len)));
-  const padded = new Float32Array(size);
-  padded.set(arr);
-  return padded;
-}
-
-// FFT using built-in AnalyserNode (for visualization only)
-export function analyzeAudioBuffer(audioBuffer, fftSize = 2048) {
-  const context = new OfflineAudioContext(1, audioBuffer.length, audioBuffer.sampleRate);
-  const source = context.createBufferSource();
-  source.buffer = audioBuffer;
-
-  const analyser = context.createAnalyser();
-  analyser.fftSize = fftSize;
-  const freqData = new Uint8Array(analyser.frequencyBinCount);
-  const timeData = new Uint8Array(analyser.fftSize);
-
-  source.connect(analyser);
-  analyser.connect(context.destination);
-  source.start();
-
-  return context.startRendering().then(() => {
-    analyser.getByteTimeDomainData(timeData);
-    analyser.getByteFrequencyData(freqData);
-    return { timeData, freqData };
-  });
-}
-
-// Converts frequency bin index to Hz
-export function binToFrequency(index, sampleRate, fftSize) {
-  return (index * sampleRate) / fftSize;
+  return equation;
 }
