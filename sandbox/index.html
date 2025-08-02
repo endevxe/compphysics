@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Episteme Sandbox</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🧪 Episteme: Experimental Sandbox</h1>
+  </header>
 
+  <main>
+    <div class="sidebar">
+      <h2>Components</h2>
+      <div class="component" draggable="true" data-type="mass">Mass</div>
+      <div class="component" draggable="true" data-type="spring">Spring</div>
+      <div class="component" draggable="true" data-type="pendulum">Pendulum</div>
+      <div class="component" draggable="true" data-type="charge">Charge</div>
+    </div>
+
+    <div class="sandbox" id="sandbox">
+      <p class="placeholder">Drag components here to start building your system.</p>
+    </div>
+  </main>
+
+  <footer>
+    <button id="run-btn">Run Simulation</button>
+    <button id="reset-btn">Reset</button>
+    <button id="vr-btn">View in 3D / VR</button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
