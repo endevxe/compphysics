@@ -1,109 +1,119 @@
 // app.js
 
-const canvas = document.getElementById("sandbox");
+const canvas = document.getElementById("sandbox-canvas");
 const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth * 0.7;
-canvas.height = window.innerHeight * 0.7;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 let components = [];
+let selectedComponent = null;
+let isDragging = false;
 
-function addComponent(type) {
-  const newComponent = {
-    type,
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    properties: {
-      mass: type === "mass" ? 1 : undefined,
-      charge: type === "charge" ? 1 : undefined,
-      k: type === "spring" ? 0.1 : undefined,
-    },
-  };
-  components.push(newComponent);
-  drawComponents();
+class Component {
+  constructor(type, x, y) {
+    this.type = type;
+    this.x = x;
+    this.y = y;
+    this.size = 50;
+    this.color = this.getColor();
+    this.mass = type === "mass" ? 1.0 : null;
+    this.charge = type === "charge" ? 1.0 : null;
+    this.k = type === "spring" ? 100 : null; // Spring constant
+    this.vx = 0; // Velocity X
+    this.vy = 0; // Velocity Y
+    this.ax = 0; // Acceleration X
+    this.ay = 0; // Acceleration Y
+  }
+
+  getColor() {
+    switch (this.type) {
+      case "mass": return "#ff6b6b";
+      case "spring": return "#4ecdc4";
+      case "charge": return "#ffe66d";
+      default: return "#ccc";
+    }
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "16px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(this.type, this.x, this.y + 5);
+  }
+
+  isHovered(mx, my) {
+    return Math.hypot(this.x - mx, this.y - my) < this.size / 2;
+  }
+
+  applyPhysics() {
+    if (this.mass) {
+      this.vx += this.ax;
+      this.vy += this.ay;
+      this.x += this.vx;
+      this.y += this.vy;
+    }
+  }
 }
 
 function drawComponents() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  components.forEach((comp) => {
-    ctx.beginPath();
-    if (comp.type === "mass") {
-      ctx.arc(comp.x, comp.y, 20, 0, Math.PI * 2);
-      ctx.fillStyle = "blue";
-    } else if (comp.type === "spring") {
-      ctx.rect(comp.x, comp.y, 10, 40);
-      ctx.fillStyle = "green";
-    } else if (comp.type === "charge") {
-      ctx.arc(comp.x, comp.y, 15, 0, Math.PI * 2);
-      ctx.fillStyle = comp.properties.charge > 0 ? "red" : "purple";
-    }
-    ctx.fill();
-  });
+  for (let c of components) {
+    c.draw(ctx);
+  }
 }
 
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth * 0.7;
-  canvas.height = window.innerHeight * 0.7;
-  drawComponents();
-});
-
-document.getElementById("add-mass").addEventListener("click", () => addComponent("mass"));
-document.getElementById("add-spring").addEventListener("click", () => addComponent("spring"));
-document.getElementById("add-charge").addEventListener("click", () => addComponent("charge"));
-document.getElementById("clear-canvas").addEventListener("click", () => {
-  components = [];
-  drawComponents();
-});
-
-// --- 3D / WebXR Integration ---
-
-// Import Three.js & VRButton via CDN in HTML
-// <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-// <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/webxr/VRButton.js"></script>
-
-const threeContainer = document.getElementById("three-view");
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.xr.enabled = true;
-document.body.appendChild(VRButton.createButton(renderer));
-threeContainer.appendChild(renderer.domElement);
-
-camera.position.z = 5;
-
-const light = new THREE.PointLight(0xffffff, 1);
-light.position.set(10, 10, 10);
-scene.add(light);
-
-function generate3DObjects() {
-  scene.clear();
-  components.forEach((comp) => {
-    let obj;
-    if (comp.type === "mass") {
-      const geometry = new THREE.SphereGeometry(0.2);
-      const material = new THREE.MeshStandardMaterial({ color: 0x0000ff });
-      obj = new THREE.Mesh(geometry, material);
-    } else if (comp.type === "spring") {
-      const geometry = new THREE.CylinderGeometry(0.05, 0.05, 0.5);
-      const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-      obj = new THREE.Mesh(geometry, material);
-    } else if (comp.type === "charge") {
-      const geometry = new THREE.SphereGeometry(0.15);
-      const color = comp.properties.charge > 0 ? 0xff0000 : 0x800080;
-      const material = new THREE.MeshStandardMaterial({ color });
-      obj = new THREE.Mesh(geometry, material);
-    }
-    if (obj) {
-      obj.position.set((comp.x - canvas.width / 2) / 100, (canvas.height / 2 - comp.y) / 100, 0);
-      scene.add(obj);
-    }
-  });
+function updatePhysics() {
+  for (let c of components) {
+    c.ax = 0;
+    c.ay = 0.1; // Simple gravity
+    c.applyPhysics();
+  }
 }
 
-document.getElementById("view-3d").addEventListener("click", () => {
-  generate3DObjects();
-  renderer.setAnimationLoop(() => {
-    renderer.render(scene, camera);
+function gameLoop() {
+  updatePhysics();
+  drawComponents();
+  requestAnimationFrame(gameLoop);
+}
+
+document.querySelectorAll(".toolbox button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const type = btn.getAttribute("data-type");
+    components.push(new Component(type, canvas.width / 2, canvas.height / 2));
   });
 });
+
+canvas.addEventListener("mousedown", (e) => {
+  const mx = e.offsetX;
+  const my = e.offsetY;
+  for (let c of components) {
+    if (c.isHovered(mx, my)) {
+      selectedComponent = c;
+      isDragging = true;
+      break;
+    }
+  }
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (isDragging && selectedComponent) {
+    selectedComponent.x = e.offsetX;
+    selectedComponent.y = e.offsetY;
+  }
+});
+
+canvas.addEventListener("mouseup", () => {
+  isDragging = false;
+  selectedComponent = null;
+});
+
+document.getElementById("vr-button").addEventListener("click", () => {
+  alert("VR Mode is not yet implemented.");
+});
+
+gameLoop();
