@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sound to Equation | Episteme</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎤 Sound to Equation</h1>
+    <p>Whistle, hum, or speak—and watch it transform into math.</p>
+  </header>
+
+  <main>
+    <section class="recorder">
+      <button id="record-btn">
+        <img src="assets/mic-icon.svg" alt="Mic Icon" />
+        <span>Start Recording</span>
+      </button>
+    </section>
+
+    <section class="visualizations">
+      <div class="plot-container">
+        <h2>Waveform</h2>
+        <canvas id="waveform-canvas"></canvas>
+      </div>
+
+      <div class="plot-container">
+        <h2>Frequency Spectrum (FFT)</h2>
+        <canvas id="fft-canvas"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
