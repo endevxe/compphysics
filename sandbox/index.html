@@ -8,27 +8,29 @@
 </head>
 <body>
   <header>
-    <h1>Episteme: Experimental Sandbox</h1>
+    <h1>⚛ Episteme: Experimental Physics Sandbox</h1>
   </header>
 
   <main>
-    <div class="sidebar">
+    <aside class="sidebar">
       <h2>Components</h2>
-      <div class="component" draggable="true" data-type="mass">Mass</div>
-      <div class="component" draggable="true" data-type="spring">Spring</div>
-      <div class="component" draggable="true" data-type="pendulum">Pendulum</div>
-      <div class="component" draggable="true" data-type="charge">Charge</div>
-    </div>
+      <div class="component" data-type="mass">Mass</div>
+      <div class="component" data-type="spring">Spring</div>
+      <div class="component" data-type="pendulum">Pendulum</div>
+      <div class="component" data-type="charge">Charge</div>
+    </aside>
 
-    <div class="sandbox" id="sandbox">
-      <p class="placeholder">Drag components here to start building your system.</p>
-    </div>
+    <section class="sandbox-container">
+      <canvas id="sandbox-canvas"></canvas>
+    </section>
   </main>
 
   <footer>
-    <button id="run-btn">Run Simulation</button>
-    <button id="reset-btn">Reset</button>
-    <button id="vr-btn">View in 3D / VR</button>
+    <div id="controls">
+      <button id="run-btn">Run Simulation</button>
+      <button id="reset-btn">Reset</button>
+      <button id="vr-btn">View in 3D / VR</button>
+    </div>
   </footer>
 
   <script src="app.js"></script>
