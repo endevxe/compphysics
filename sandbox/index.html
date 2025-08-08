@@ -8,7 +8,7 @@
 </head>
 <body>
   <header>
-    <h1>⚛ Episteme: Experimental Physics Sandbox</h1>
+    <h1>Episteme: Experimental Physics Sandbox</h1>
   </header>
 
   <main>
@@ -19,6 +19,23 @@
       <div class="component" data-type="pendulum">Pendulum</div>
       <div class="component" data-type="charge">Charge</div>
     </aside>
+
+    <!-- Toolbox -->
+    <div class="toolbox">
+      <button data-type="mass">Add Mass</button>
+      <button data-type="spring">Add Spring</button>
+      <button data-type="charge">Add Charge</button>
+      <button id="vr-button">VR Mode</button>
+    </div>
+
+    <!-- Properties Panel -->
+    <div id="properties-panel" class="properties-panel">
+      <h3>Properties</h3>
+      <p>Select a component</p>
+    </div>
+
+    <!-- Canvas -->
+    <canvas id="sandbox-canvas"></canvas>
 
     <section class="sandbox-container">
       <canvas id="sandbox-canvas"></canvas>

@@ -116,3 +116,39 @@ canvas {
     border-bottom: 1px solid #ddd;
   }
 }
+
+.properties-panel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 220px;
+  background: rgba(30, 30, 30, 0.9);
+  border: 1px solid #444;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: sans-serif;
+  color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.properties-panel h3 {
+  margin-top: 0;
+  font-size: 18px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 5px;
+}
+
+.properties-panel label {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.properties-panel input {
+  width: 100%;
+  padding: 4px;
+  background: #222;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 4px;
+}
