@@ -248,6 +248,38 @@
     }
   </style>
 </head>
+  <!-- ── Auth Modal ──────────────────────────────────────── -->
+<div id="auth-modal" style="display:none">
+  <div id="auth-backdrop"></div>
+  <div id="auth-box">
+
+    <button id="auth-close">✕</button>
+
+    <h2 id="auth-title">Sign in</h2>
+
+    <!-- Google button -->
+    <button id="btn-google">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="18" height="18" alt="">
+      Continue with Google
+    </button>
+
+    <div id="auth-divider"><span>or</span></div>
+
+    <!-- Email + password -->
+    <input id="auth-email"    type="email"    placeholder="Email address" />
+    <input id="auth-password" type="password" placeholder="Password" />
+
+    <p id="auth-error"></p>
+
+    <button id="btn-submit">Sign in</button>
+
+    <p id="auth-switch">
+      Don't have an account?
+      <a id="auth-toggle" href="#">Sign up</a>
+    </p>
+
+  </div>
+</div>
   <script type="module" src="./main.js"></script>
 <body>
   <header>
@@ -262,6 +294,10 @@
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
     <a href="help.html">Help</a>
+    <!-- ── Nav auth button (put this wherever your navbar is) ── -->
+    <button id="btn-open-auth">Sign in</button>
+    <button id="btn-signout" style="display:none">Sign out</button>
+    <span   id="user-email-display" style="display:none"></span>
   </nav>
 </header>
 
