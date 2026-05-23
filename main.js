@@ -98,6 +98,8 @@ supabase.auth.onAuthStateChange((event, session) => {
     signoutBtn.style.display     = 'inline-block'
     emailDisplay.style.display   = 'inline'
     emailDisplay.textContent     = session.user.email
+
+    await loadProfile(session.user.id)
   }
   if (event === 'SIGNED_OUT') {
     openBtn.style.display        = 'inline-block'
