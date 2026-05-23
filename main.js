@@ -106,3 +106,25 @@ supabase.auth.onAuthStateChange((event, session) => {
     emailDisplay.textContent     = ''
   }
 })
+
+
+// ── Load user profile from database ─────────────────────────────
+async function loadProfile(userId) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single()
+
+  if (error) {
+    console.error('Profile error:', error.message)
+    return
+  }
+
+  console.log('Profile loaded:', data)
+  // data.tier will be 'free' or 'pro'
+  // data.email, data.username, etc.
+
+  // Store it globally so any page can access it
+  window.currentUser = data
+}
