@@ -91,7 +91,7 @@ signoutBtn.addEventListener('click', async () => {
 
 // ── Auth state listener ──────────────────────────────────────────
 // This is the single source of truth for UI state
-supabase.auth.onAuthStateChange((event, session) => {
+supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === 'SIGNED_IN') {
     hideModal()
     openBtn.style.display        = 'none'
